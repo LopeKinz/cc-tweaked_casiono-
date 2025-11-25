@@ -63,13 +63,12 @@ end
 
 -- Einsatz wählen
 function Horses.selectBet(maxBet)
-    local buttons = Horses.ui.selectAmount(
+    local result = Horses.ui.selectAmount(
         "HORSE RACING - Einsatz",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Horses.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Pferd wählen

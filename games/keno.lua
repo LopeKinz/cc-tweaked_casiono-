@@ -61,13 +61,12 @@ end
 
 -- Einsatz wählen
 function Keno.selectBet(maxBet)
-    local buttons = Keno.ui.selectAmount(
+    local result = Keno.ui.selectAmount(
         "KENO - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Keno.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Anzahl Zahlen wählen

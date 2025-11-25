@@ -63,13 +63,12 @@ end
 
 -- Einsatz wählen
 function War.selectBet(maxBet)
-    local buttons = War.ui.selectAmount(
+    local result = War.ui.selectAmount(
         "WAR - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = War.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Eine Runde spielen

@@ -55,13 +55,12 @@ end
 
 -- Einsatz wählen
 function Mines.selectBet(maxBet)
-    local buttons = Mines.ui.selectAmount(
+    local result = Mines.ui.selectAmount(
         "MINES - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Mines.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Anzahl Minen wählen

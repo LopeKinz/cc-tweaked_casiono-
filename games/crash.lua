@@ -49,13 +49,12 @@ end
 
 -- Einsatz wählen
 function Crash.selectBet(maxBet)
-    local buttons = Crash.ui.selectAmount(
+    local result = Crash.ui.selectAmount(
         "CRASH - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Crash.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Eine Runde spielen

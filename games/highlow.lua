@@ -58,13 +58,12 @@ end
 
 -- Einsatz wählen
 function HighLow.selectBet(maxBet)
-    local buttons = HighLow.ui.selectAmount(
+    local result = HighLow.ui.selectAmount(
         "HIGH/LOW - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = HighLow.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Eine Runde spielen

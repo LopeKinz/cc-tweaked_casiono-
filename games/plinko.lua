@@ -58,13 +58,12 @@ end
 
 -- Einsatz wählen
 function Plinko.selectBet(maxBet)
-    local buttons = Plinko.ui.selectAmount(
+    local result = Plinko.ui.selectAmount(
         "PLINKO - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Plinko.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Ball fallen lassen

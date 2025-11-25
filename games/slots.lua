@@ -74,14 +74,13 @@ end
 
 -- Einsatz auswählen
 function Slots.selectBet(maxBet)
-    local buttons = Slots.ui.selectAmount(
+    local result = Slots.ui.selectAmount(
         "SLOT MACHINE - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
 
-    local choice, button = Slots.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Walzen drehen
