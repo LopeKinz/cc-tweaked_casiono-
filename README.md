@@ -40,6 +40,18 @@ Ein vollständiges Casino-System für Minecraft 1.21.1 mit dem Modpack "All the 
 - **Animationen** in allen Spielen
 - **Auto-Start** beim Booten
 
+### 🏆 Progression & Belohnungen:
+- **📊 Leaderboard** - Top 10 Spieler in 4 Kategorien (Siege, Level, Größter Gewinn, Total Gewonnen)
+- **🎖️ Achievements** - 10 freischaltbare Erfolge mit Benachrichtigungen
+- **💰 Daily Bonus** - Tägliche Diamanten (5 + Streak-Bonus, max 15)
+- **📈 Level-System** - XP sammeln (1 XP pro Diamant Einsatz), Level aufsteigen
+- **🎰 Jackpot** - Progressiver Jackpot mit 0.1% Gewinnchance pro Spiel
+- **📝 Tägliche Quests** - 3 Quests pro Tag mit Diamanten-Belohnungen
+- **📊 Detaillierte Statistiken** - Tracking aller Spiele, Gewinnraten, Profit
+- **📜 Spiel-Verlauf** - Letzte 20 Spiele anzeigen
+- **🏅 Spieler-Ränge** - Globale Rangliste mit Position
+- **💾 Persistente Daten** - Alle Daten werden gespeichert
+
 ## 🏗️ Hardware-Setup
 
 ### Komponenten:

@@ -43,6 +43,18 @@ local function loadModules()
     end
     modules.Inventory = dofile("inventory.lua")
 
+    -- Database laden
+    if not fs.exists("database.lua") then
+        error("database.lua nicht gefunden!")
+    end
+    modules.Database = dofile("database.lua")
+
+    -- Features laden
+    if not fs.exists("features.lua") then
+        error("features.lua nicht gefunden!")
+    end
+    modules.Features = dofile("features.lua")
+
     -- Spiele laden
     modules.games = {}
 
@@ -157,13 +169,41 @@ local function selectPlayer(players, ui)
 end
 
 -- ===== HAUPTMENÜ =====
-local function showMainMenu(ui, playerName, balance)
+local function showMainMenu(ui, playerName, balance, database)
     ui.clear()
     ui.drawTitle("CASINO - Hauptmenue")
 
-    -- Spieler-Info
-    ui.drawText(2, 3, "Spieler: " .. playerName, colors.white)
+    -- Spieler-Info mit Level
+    local player = database.getPlayer(playerName)
+    ui.drawText(2, 3, "Spieler: " .. playerName .. " | Level: " .. player.level, colors.white)
     ui.showDiamonds(balance, 2, 4)
+
+    -- Jackpot-Anzeige
+    local jackpot = database.getJackpot()
+    ui.drawText(2, 5, "JACKPOT: " .. jackpot .. " Diamanten", colors.yellow)
+
+    -- Kategorie-Menü
+    local options = {
+        {text = "SPIELE SPIELEN", color = colors.lime, game = "games_menu"},
+        {text = "STATISTIKEN", color = colors.blue, game = "stats"},
+        {text = "LEADERBOARD", color = colors.yellow, game = "leaderboard"},
+        {text = "ACHIEVEMENTS", color = colors.purple, game = "achievements"},
+        {text = "DAILY BONUS", color = colors.orange, game = "daily"},
+        {text = "QUESTS", color = colors.cyan, game = "quests"},
+        {text = "JACKPOT INFO", color = colors.yellow, game = "jackpot_info"},
+        {text = "Diamanten Update", color = colors.lightGray, game = "refresh"},
+        {text = "Beenden", color = colors.red, game = "exit"}
+    }
+
+    local buttons = ui.drawMenu("", options, 6)
+    local choice, button = ui.waitForTouch(buttons)
+    return options[choice].game
+end
+
+-- ===== SPIELE-MENÜ =====
+local function showGamesMenu(ui)
+    ui.clear()
+    ui.drawTitle("SPIELE")
 
     -- Spiele-Menü (Alle Spiele!)
     local options = {
@@ -193,13 +233,11 @@ local function showMainMenu(ui, playerName, balance)
         {text = "SCRATCH CARDS", color = colors.magenta, game = "scratch"},
         {text = "HORSE RACING", color = colors.lime, game = "horses"},
 
-        -- System
-        {text = "Diamanten Update", color = colors.yellow, game = "refresh"},
-        {text = "Beenden", color = colors.red, game = "exit"}
+        -- Zurück
+        {text = "Zurueck", color = colors.red, game = "back"}
     }
 
-    local buttons = ui.drawMenu("", options, 7)
-
+    local buttons = ui.drawMenu("", options, 5)
     local choice, button = ui.waitForTouch(buttons)
     return options[choice].game
 end
@@ -259,6 +297,12 @@ local function main()
         inventory.wrap()
     end
 
+    -- Database initialisieren
+    local database = modules.Database.init()
+
+    -- Features initialisieren
+    local features = modules.Features.init(ui, database)
+
     -- Spiele initialisieren
     for gameName, game in pairs(modules.games) do
         game.init(ui, inventory)
@@ -295,30 +339,93 @@ local function main()
             local playing = true
             while playing do
                 -- Hauptmenü
-                local selectedGame = showMainMenu(ui, playerName, playerBalance)
+                local selectedAction = showMainMenu(ui, playerName, playerBalance, database)
 
-                if selectedGame == "exit" then
+                if selectedAction == "exit" then
                     playing = false
-                elseif selectedGame == "refresh" then
+
+                elseif selectedAction == "refresh" then
                     playerBalance = inventory.countDiamonds()
                     ui.clear()
                     ui.drawTitle("CASINO")
                     ui.centerText(10, "Balance aktualisiert!", colors.lime)
                     ui.showDiamonds(playerBalance, math.floor(ui.width / 2) - 6, 12)
                     sleep(2)
-                elseif modules.games[selectedGame] then
-                    -- Spiel starten
-                    playerBalance = modules.games[selectedGame].play(playerName, playerBalance)
 
-                    -- Balance nach Spiel aktualisieren
-                    if playerBalance <= 0 then
-                        ui.clear()
-                        ui.drawTitle("GAME OVER")
-                        ui.centerText(10, "Keine Diamanten mehr!", colors.red)
-                        ui.centerText(12, playerName .. ", komm bald wieder!", colors.yellow)
-                        sleep(3)
-                        playing = false
+                elseif selectedAction == "games_menu" then
+                    -- Spiele-Menü
+                    local selectedGame = showGamesMenu(ui)
+
+                    if selectedGame ~= "back" and modules.games[selectedGame] then
+                        -- Spiel starten
+                        local balanceBefore = playerBalance
+                        playerBalance = modules.games[selectedGame].play(playerName, playerBalance)
+                        local balanceAfter = playerBalance
+
+                        -- Spiel-Ergebnis in Datenbank speichern
+                        local bet = math.abs(balanceAfter - balanceBefore)
+                        local won = balanceAfter > balanceBefore
+                        local payout = won and (balanceAfter - balanceBefore) or 0
+
+                        if bet > 0 then
+                            database.recordGame(playerName, selectedGame, bet, won, payout)
+
+                            -- Jackpot-Prüfung
+                            local jackpotWon, jackpotAmount = database.checkJackpot()
+                            if jackpotWon then
+                                ui.clear()
+                                ui.drawTitle("*** JACKPOT ***")
+                                ui.centerText(10, "JACKPOT GEWONNEN!", colors.yellow)
+                                ui.centerText(12, jackpotAmount .. " DIAMANTEN!", colors.lime)
+                                sleep(5)
+                                playerBalance = playerBalance + jackpotAmount
+                            end
+
+                            -- Achievement-Benachrichtigungen
+                            local newAchievements = database.checkAchievements(playerName)
+                            if #newAchievements > 0 then
+                                ui.clear()
+                                ui.drawTitle("ACHIEVEMENT FREIGESCHALTET!")
+                                local y = 10
+                                for _, achievement in ipairs(newAchievements) do
+                                    ui.centerText(y, achievement, colors.lime)
+                                    y = y + 2
+                                end
+                                sleep(3)
+                            end
+                        end
+
+                        -- Balance nach Spiel prüfen
+                        if playerBalance <= 0 then
+                            ui.clear()
+                            ui.drawTitle("GAME OVER")
+                            ui.centerText(10, "Keine Diamanten mehr!", colors.red)
+                            ui.centerText(12, playerName .. ", komm bald wieder!", colors.yellow)
+                            sleep(3)
+                            playing = false
+                        end
                     end
+
+                elseif selectedAction == "stats" then
+                    features.showStats(playerName)
+
+                elseif selectedAction == "leaderboard" then
+                    features.showLeaderboard()
+
+                elseif selectedAction == "achievements" then
+                    features.showAchievements(playerName)
+
+                elseif selectedAction == "daily" then
+                    local bonus = features.showDailyBonus(playerName)
+                    if bonus > 0 then
+                        playerBalance = playerBalance + bonus
+                    end
+
+                elseif selectedAction == "quests" then
+                    features.showQuests(playerName)
+
+                elseif selectedAction == "jackpot_info" then
+                    features.showJackpotInfo()
                 end
             end
         end
