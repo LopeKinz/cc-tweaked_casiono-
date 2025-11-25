@@ -173,6 +173,92 @@ function UI.drawMenu(title, options, startY)
     return buttons
 end
 
+-- Scrollbares Auswahl-Menu mit Hoch/Runter Buttons
+function UI.drawMenuScrollable(title, options, startY, itemsPerPage)
+    itemsPerPage = itemsPerPage or 6  -- Zeige 6 Items pro Seite
+    local currentPage = 1
+    local totalPages = math.ceil(#options / itemsPerPage)
+
+    while true do
+        UI.clear()
+        UI.drawTitle(title)
+
+        -- Seiten-Info anzeigen
+        UI.centerText(3, "Seite " .. currentPage .. " / " .. totalPages, colors.gray)
+
+        local buttons = {}
+        local buttonHeight = 3
+        local buttonWidth = UI.width - 20
+        local buttonX = 11
+        local y = startY or 5
+
+        -- Berechne welche Items angezeigt werden sollen
+        local startIndex = (currentPage - 1) * itemsPerPage + 1
+        local endIndex = math.min(startIndex + itemsPerPage - 1, #options)
+
+        -- Zeichne die sichtbaren Items
+        for i = startIndex, endIndex do
+            local option = options[i]
+            local button = UI.drawButton(
+                buttonX,
+                y,
+                buttonWidth,
+                buttonHeight,
+                option.text,
+                option.color or UI.colors.primary,
+                UI.colors.text
+            )
+            button.action = option.action
+            button.optionIndex = i  -- Speichere den ursprünglichen Index
+            table.insert(buttons, button)
+            y = y + buttonHeight + 1
+        end
+
+        -- Scroll-Buttons hinzufügen
+        y = y + 2
+
+        if currentPage > 1 then
+            -- Hoch-Button
+            local upButton = UI.drawButton(
+                math.floor(UI.width / 2) - 20,
+                y,
+                18, 3,
+                "^ HOCH",
+                colors.blue,
+                colors.white
+            )
+            upButton.action = "scroll_up"
+            table.insert(buttons, upButton)
+        end
+
+        if currentPage < totalPages then
+            -- Runter-Button
+            local downButton = UI.drawButton(
+                math.floor(UI.width / 2) + 2,
+                y,
+                18, 3,
+                "v RUNTER",
+                colors.blue,
+                colors.white
+            )
+            downButton.action = "scroll_down"
+            table.insert(buttons, downButton)
+        end
+
+        -- Warte auf Touch
+        local choice, button = UI.waitForTouch(buttons)
+
+        if button.action == "scroll_up" then
+            currentPage = currentPage - 1
+        elseif button.action == "scroll_down" then
+            currentPage = currentPage + 1
+        else
+            -- Ein Item wurde ausgewählt - gebe den ursprünglichen Index zurück
+            return button.optionIndex or choice, button
+        end
+    end
+end
+
 -- Liste mit Scroll-Funktion
 function UI.drawList(title, items, startY, maxVisible)
     UI.clear()

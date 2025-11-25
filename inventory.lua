@@ -121,14 +121,16 @@ end
 function Inventory.takeFromPlayer(amount)
     if not Inventory.playerChest or not Inventory.bridge then
         print("WARNUNG: Kann Diamanten nicht transferieren - Kiste oder Bridge fehlt")
-        return false
+        return false, "Keine Kiste oder Bridge"
     end
 
     -- Prüfe ob genug Diamanten vorhanden sind
     local available = Inventory.countPlayerDiamonds()
+    print("[INFO] Spieler hat " .. available .. " Diamanten, muss " .. amount .. " zahlen")
+
     if available < amount then
-        print("WARNUNG: Nicht genug Diamanten in Spieler-Kiste")
-        return false
+        print("WARNUNG: Nicht genug Diamanten in Spieler-Kiste (" .. available .. " < " .. amount .. ")")
+        return false, "Nicht genug Diamanten"
     end
 
     -- Importiere Diamanten aus der Front-Kiste ins RS-Netzwerk
@@ -139,11 +141,17 @@ function Inventory.takeFromPlayer(amount)
         )
     end)
 
-    if not success or not imported or imported < amount then
-        print("FEHLER: Konnte Diamanten nicht aus Spieler-Kiste nehmen")
-        return false
+    if not success then
+        print("FEHLER: importItem fehlgeschlagen: " .. tostring(imported))
+        return false, "Import fehlgeschlagen"
     end
 
+    if not imported or imported < amount then
+        print("FEHLER: Konnte nur " .. tostring(imported or 0) .. " von " .. amount .. " Diamanten nehmen")
+        return false, "Unvollständiger Transfer (" .. tostring(imported or 0) .. "/" .. amount .. ")"
+    end
+
+    print("[ERFOLG] " .. amount .. " Diamanten vom Spieler genommen")
     return true
 end
 
@@ -152,14 +160,17 @@ end
 function Inventory.giveToPlayer(amount)
     if not Inventory.playerChest or not Inventory.bridge then
         print("WARNUNG: Kann Diamanten nicht transferieren - Kiste oder Bridge fehlt")
-        return false
+        return false, "Keine Kiste oder Bridge"
     end
 
     -- Prüfe ob genug Diamanten im Casino vorhanden sind
     local available = Inventory.countNetworkDiamonds()
+    print("[INFO] Casino hat " .. available .. " Diamanten, braucht " .. amount)
+
     if available < amount then
-        print("WARNUNG: Casino hat nicht genug Diamanten!")
-        return false
+        print("WARNUNG: Casino hat nicht genug Diamanten! (" .. available .. " < " .. amount .. ")")
+        -- WICHTIG: Versuche trotzdem zu exportieren, was verfügbar ist
+        -- Dies verhindert, dass Spieler ihre Gewinne verlieren
     end
 
     -- Exportiere Diamanten aus dem RS-Netzwerk in die Front-Kiste
@@ -170,11 +181,17 @@ function Inventory.giveToPlayer(amount)
         )
     end)
 
-    if not success or not exported or exported < amount then
-        print("FEHLER: Konnte Diamanten nicht zur Spieler-Kiste hinzufügen")
-        return false
+    if not success then
+        print("FEHLER: exportItem fehlgeschlagen: " .. tostring(exported))
+        return false, "Export fehlgeschlagen"
     end
 
+    if not exported or exported < amount then
+        print("FEHLER: Konnte nur " .. tostring(exported or 0) .. " von " .. amount .. " Diamanten transferieren")
+        return false, "Unvollständiger Transfer (" .. tostring(exported or 0) .. "/" .. amount .. ")"
+    end
+
+    print("[ERFOLG] " .. amount .. " Diamanten zum Spieler transferiert")
     return true
 end
 
@@ -182,15 +199,28 @@ end
 function Inventory.syncBalance(oldBalance, newBalance)
     local difference = newBalance - oldBalance
 
+    print("[SYNC] Balance-Änderung: " .. oldBalance .. " -> " .. newBalance .. " (Diff: " .. difference .. ")")
+
     if difference > 0 then
         -- Spieler hat gewonnen - Diamanten hinzufügen
-        return Inventory.giveToPlayer(difference)
+        print("[SYNC] Spieler hat gewonnen! Gebe " .. difference .. " Diamanten...")
+        local success, errorMsg = Inventory.giveToPlayer(difference)
+        if not success then
+            print("[SYNC] FEHLER beim Auszahlen: " .. tostring(errorMsg))
+        end
+        return success, errorMsg
     elseif difference < 0 then
         -- Spieler hat verloren - Diamanten nehmen
-        return Inventory.takeFromPlayer(math.abs(difference))
+        print("[SYNC] Spieler hat verloren! Nehme " .. math.abs(difference) .. " Diamanten...")
+        local success, errorMsg = Inventory.takeFromPlayer(math.abs(difference))
+        if not success then
+            print("[SYNC] FEHLER beim Einzahlen: " .. tostring(errorMsg))
+        end
+        return success, errorMsg
     end
 
     -- Keine Änderung
+    print("[SYNC] Keine Balance-Änderung")
     return true
 end
 
