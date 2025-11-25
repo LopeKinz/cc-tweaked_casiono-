@@ -1,5 +1,10 @@
 -- Inventory Management über RS Bridge
+-- Kompatibel mit Advanced Peripherals 0.7+ API
+-- Dokumentation: https://docs.advanced-peripherals.de/0.7/peripherals/rs_bridge/
 local Inventory = {}
+
+-- Konfiguration: Richtung zur Truhe (laut INSTALLATION.md: vor dem Computer)
+Inventory.CHEST_DIRECTION = "front"
 
 -- RS Bridge initialisieren
 function Inventory.init(rsBridge)
@@ -46,24 +51,17 @@ function Inventory.takeDiamonds(amount, targetChest)
         if item.name == "minecraft:diamond" then
             local toTake = math.min(amount - taken, item.amount)
 
-            -- Exportiere in Computer-Inventar (oder spezifische Truhe)
-            if targetChest then
-                local success = Inventory.bridge.exportItem(
-                    {name = "minecraft:diamond", count = toTake},
-                    targetChest
-                )
-                if success then
-                    taken = taken + toTake
-                end
-            else
-                -- Export in Computer selbst (falls möglich)
-                local success = Inventory.bridge.exportItem(
-                    {name = "minecraft:diamond"},
-                    toTake
-                )
-                if success then
-                    taken = taken + toTake
-                end
+            -- Exportiere in Truhe (Richtung konfigurierbar)
+            local direction = targetChest or Inventory.CHEST_DIRECTION
+
+            -- Korrekte API: exportItem(item: table, direction: string) -> number
+            local exported = Inventory.bridge.exportItem(
+                {name = "minecraft:diamond", count = toTake},
+                direction
+            )
+
+            if exported and exported > 0 then
+                taken = taken + exported
             end
 
             if taken >= amount then
@@ -81,18 +79,16 @@ function Inventory.returnDiamonds(amount, sourceChest)
         return false
     end
 
-    -- Import von Computer oder spezifischer Truhe
-    if sourceChest then
-        return Inventory.bridge.importItem(
-            {name = "minecraft:diamond", count = amount},
-            sourceChest
-        )
-    else
-        return Inventory.bridge.importItem(
-            {name = "minecraft:diamond"},
-            amount
-        )
-    end
+    -- Import von Truhe (Richtung konfigurierbar)
+    local direction = sourceChest or Inventory.CHEST_DIRECTION
+
+    -- Korrekte API: importItem(item: table, direction: string) -> number
+    local imported = Inventory.bridge.importItem(
+        {name = "minecraft:diamond", count = amount},
+        direction
+    )
+
+    return imported and imported > 0
 end
 
 -- Prüfen ob genug Diamanten vorhanden sind
