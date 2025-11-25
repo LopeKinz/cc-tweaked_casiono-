@@ -81,8 +81,13 @@ Ein vollständiges Casino-System für Minecraft 1.21.1 mit dem Modpack "All the 
 
 ```bash
 # Auf dem Advanced Computer:
-pastebin get CODE installer
+wget https://raw.githubusercontent.com/LopeKinz/cc-tweaked_casiono-/main/installer.lua installer.lua
 installer
+```
+
+Oder als One-Liner:
+```bash
+wget run https://raw.githubusercontent.com/LopeKinz/cc-tweaked_casiono-/main/installer.lua
 ```
 
 Der Installer lädt automatisch alle 21 Dateien herunter und richtet alles ein!
