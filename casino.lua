@@ -290,9 +290,25 @@ local function main()
     -- Inventory initialisieren
     local inventory
     if peripherals.rsBridge then
-        inventory = modules.Inventory.init(peripherals.rsBridge)
+        -- Versuche RS Bridge zu initialisieren
+        local success, err = pcall(function()
+            inventory = modules.Inventory.init(peripherals.rsBridge)
+            -- Test ob listItems() funktioniert
+            inventory.getItems()
+        end)
+
+        if not success then
+            print("WARNUNG: RS Bridge funktioniert nicht richtig.")
+            print("Fehler: " .. tostring(err))
+            print("Verwende Simple Mode...")
+            sleep(3)
+            peripherals.rsBridge = nil
+            inventory = modules.Inventory.initSimple()
+            inventory.wrap()
+        end
     else
         print("WARNUNG: RS Bridge nicht gefunden. Verwende Simple Mode.")
+        sleep(2)
         inventory = modules.Inventory.initSimple()
         inventory.wrap()
     end

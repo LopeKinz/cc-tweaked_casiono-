@@ -20,7 +20,22 @@ function Inventory.getItems()
     if not Inventory.bridge then
         return {}
     end
-    return Inventory.bridge.listItems()
+
+    -- Prüfe ob listItems() Methode existiert
+    if type(Inventory.bridge.listItems) ~= "function" then
+        error("RS Bridge hat keine listItems() Methode! Bitte Advanced Peripherals 0.7+ installieren.")
+    end
+
+    -- Versuche Items abzurufen mit Fehlerbehandlung
+    local success, result = pcall(function()
+        return Inventory.bridge.listItems()
+    end)
+
+    if not success then
+        error("Fehler beim Abrufen der Items: " .. tostring(result))
+    end
+
+    return result or {}
 end
 
 -- Diamanten im Netzwerk zählen
