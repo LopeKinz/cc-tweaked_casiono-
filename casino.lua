@@ -66,6 +66,51 @@ local function loadModules()
         modules.games.dice = dofile("games/dice.lua")
     end
 
+    -- Neue Spiele
+    if fs.exists("games/keno.lua") then
+        modules.games.keno = dofile("games/keno.lua")
+    end
+
+    if fs.exists("games/plinko.lua") then
+        modules.games.plinko = dofile("games/plinko.lua")
+    end
+
+    if fs.exists("games/crash.lua") then
+        modules.games.crash = dofile("games/crash.lua")
+    end
+
+    if fs.exists("games/highlow.lua") then
+        modules.games.highlow = dofile("games/highlow.lua")
+    end
+
+    if fs.exists("games/mines.lua") then
+        modules.games.mines = dofile("games/mines.lua")
+    end
+
+    if fs.exists("games/wheel.lua") then
+        modules.games.wheel = dofile("games/wheel.lua")
+    end
+
+    if fs.exists("games/baccarat.lua") then
+        modules.games.baccarat = dofile("games/baccarat.lua")
+    end
+
+    if fs.exists("games/war.lua") then
+        modules.games.war = dofile("games/war.lua")
+    end
+
+    if fs.exists("games/scratch.lua") then
+        modules.games.scratch = dofile("games/scratch.lua")
+    end
+
+    if fs.exists("games/horses.lua") then
+        modules.games.horses = dofile("games/horses.lua")
+    end
+
+    if fs.exists("games/tower.lua") then
+        modules.games.tower = dofile("games/tower.lua")
+    end
+
     return modules
 end
 
@@ -120,13 +165,35 @@ local function showMainMenu(ui, playerName, balance)
     ui.drawText(2, 3, "Spieler: " .. playerName, colors.white)
     ui.showDiamonds(balance, 2, 4)
 
-    -- Spiele-Menü
+    -- Spiele-Menü (Alle Spiele!)
     local options = {
+        -- Klassische Casino-Spiele
         {text = "SLOT MACHINE", color = colors.purple, game = "slots"},
         {text = "ROULETTE", color = colors.red, game = "roulette"},
         {text = "BLACKJACK", color = colors.orange, game = "blackjack"},
+        {text = "BACCARAT", color = colors.pink, game = "baccarat"},
+
+        -- Würfel & Münzen
         {text = "COIN FLIP", color = colors.blue, game = "coinflip"},
         {text = "DICE", color = colors.lime, game = "dice"},
+
+        -- Kartenspiele
+        {text = "HIGH/LOW", color = colors.lightBlue, game = "highlow"},
+        {text = "WAR", color = colors.brown, game = "war"},
+
+        -- Moderne Casino-Spiele
+        {text = "CRASH", color = colors.red, game = "crash"},
+        {text = "MINES", color = colors.gray, game = "mines"},
+        {text = "TOWER", color = colors.cyan, game = "tower"},
+
+        -- Spezial-Spiele
+        {text = "PLINKO", color = colors.yellow, game = "plinko"},
+        {text = "WHEEL OF FORTUNE", color = colors.orange, game = "wheel"},
+        {text = "KENO", color = colors.green, game = "keno"},
+        {text = "SCRATCH CARDS", color = colors.magenta, game = "scratch"},
+        {text = "HORSE RACING", color = colors.lime, game = "horses"},
+
+        -- System
         {text = "Diamanten Update", color = colors.yellow, game = "refresh"},
         {text = "Beenden", color = colors.red, game = "exit"}
     }
@@ -148,16 +215,15 @@ local function showWelcomeScreen(ui)
     sleep(0.5)
 
     -- Info
-    local y = 6
+    local y = 5
     local info = {
         "Willkommen im Casino!",
         "",
-        "5 spannende Spiele:",
-        "- Slot Machine",
-        "- Roulette",
-        "- Blackjack",
-        "- Coin Flip",
-        "- Dice",
+        "16 spannende Spiele:",
+        "Slots, Roulette, Blackjack, Baccarat",
+        "Coin Flip, Dice, High/Low, War",
+        "Crash, Mines, Tower, Plinko",
+        "Wheel, Keno, Scratch, Horses",
         "",
         "Viel Glueck!"
     }

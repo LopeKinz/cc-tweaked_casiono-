@@ -4,17 +4,41 @@ Ein vollständiges Casino-System für Minecraft 1.21.1 mit dem Modpack "All the 
 
 ## 🎰 Features
 
-- **5 verschiedene Casino-Spiele:**
-  - 🎰 Slot Machine
-  - 🎡 Roulette
-  - 🃏 Blackjack
-  - 🪙 Coin Flip
-  - 🎲 Würfel (Dice)
+### **16 verschiedene Casino-Spiele!**
 
+#### 🎰 Klassische Casino-Spiele:
+- **Slot Machine** - 3 Walzen, 6 Symbole, bis zu 100x Gewinn
+- **Roulette** - Europäisches Roulette mit allen Wettoptionen
+- **Blackjack** - Hit, Stand, Double Down gegen den Dealer
+- **Baccarat** - Player, Banker oder Tie
+
+#### 🎲 Würfel & Münzen:
+- **Coin Flip** - Kopf oder Zahl, einfach und schnell
+- **Dice** - 2 Würfel mit 6 verschiedenen Wettoptionen
+
+#### 🃏 Kartenspiele:
+- **High/Low** - Rate höher oder niedriger, baue Streak auf
+- **War** - Klassischer Kartenkrieg
+
+#### 🚀 Moderne Casino-Spiele:
+- **Crash** - Multiplier steigt, cashout bevor es crasht!
+- **Mines** - Finde sichere Felder, vermeide Minen
+- **Tower** - Klettere den Turm hoch, wähle den richtigen Weg
+
+#### 🎪 Spezial-Spiele:
+- **Plinko** - Ball fällt durch Pins, Multiplikatoren bis 100x
+- **Wheel of Fortune** - Drehe das Glücksrad
+- **Keno** - Zahlen-Lotterie, wähle 3-10 Zahlen
+- **Scratch Cards** - Rubbellose, finde 3 gleiche Symbole
+- **Horse Racing** - Wette auf Pferde im Rennen
+
+### 🌟 System-Features:
 - **Automatisches Inventar-Management** mit RS Bridge
 - **Vollständige Touch-Steuerung** (keine Slider!)
-- **Player Detection** mit Namensauswahl
-- **Diamant-Einsätze**
+- **Player Detection** mit Namensauswahl (15 Blöcke Reichweite)
+- **Diamant-Einsätze** (1-10 Diamanten pro Spiel)
+- **Animationen** in allen Spielen
+- **Auto-Start** beim Booten
 
 ## 🏗️ Hardware-Setup
 
@@ -66,8 +90,19 @@ reboot
     ├── slots.lua       # Slot Machine
     ├── roulette.lua    # Roulette
     ├── blackjack.lua   # Blackjack
+    ├── baccarat.lua    # Baccarat
     ├── coinflip.lua    # Coin Flip
-    └── dice.lua        # Würfel
+    ├── dice.lua        # Würfel
+    ├── highlow.lua     # High/Low
+    ├── war.lua         # War (Kartenkrieg)
+    ├── crash.lua       # Crash
+    ├── mines.lua       # Mines
+    ├── tower.lua       # Tower Climb
+    ├── plinko.lua      # Plinko
+    ├── wheel.lua       # Wheel of Fortune
+    ├── keno.lua        # Keno
+    ├── scratch.lua     # Scratch Cards
+    └── horses.lua      # Horse Racing
 ```
 
 ## 🔧 Konfiguration
@@ -86,35 +121,108 @@ Die Peripheriegeräte werden automatisch erkannt:
 
 ## 🎲 Spiel-Details
 
-### Slot Machine
-- Einsatz: 1-10 Diamanten
-- 3 Walzen mit Symbolen
-- Verschiedene Gewinnkombinationen
+### 🎰 Slot Machine
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** Bis zu 100x bei 3x Dollar
+- 3 Walzen mit 6 verschiedenen Symbolen
 
-### Roulette
-- Einsatz: 1-10 Diamanten
-- Setze auf Rot/Schwarz, Gerade/Ungerade, oder spezifische Zahlen
-- Auszahlungsquoten: 2x, 2x, 36x
+### 🎡 Roulette
+- **Einsatz:** 1-10 Diamanten
+- **Wetten:** Rot/Schwarz (2x), Gerade/Ungerade (2x), Zahlen (36x)
+- Zahlen 0-36
 
-### Blackjack
-- Einsatz: 1-10 Diamanten
-- Klassisches Blackjack gegen den Dealer
+### 🃏 Blackjack
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 2x (2.5x bei Blackjack)
 - Hit, Stand, Double Down
+- Dealer muss unter 17 ziehen
 
-### Coin Flip
-- Einsatz: 1-10 Diamanten
+### 🎴 Baccarat
+- **Einsatz:** 1-10 Diamanten
+- **Wetten:** Player (2x), Banker (1.95x), Tie (8x)
+- Klassische Baccarat-Regeln
+
+### 🪙 Coin Flip
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 2x
 - Kopf oder Zahl
-- 2x Auszahlung bei Gewinn
 
-### Würfel
-- Einsatz: 1-10 Diamanten
-- 2 Würfel werfen
-- Verschiedene Wettoptionen
+### 🎲 Dice
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 2x bis 5x
+- Wettoptionen: 7/11, Gerade/Ungerade, High/Low, Pasch
+
+### 🃏 High/Low
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** +0.5x pro richtiger Runde
+- Rate ob nächste Karte höher oder niedriger ist
+- Cashout jederzeit möglich
+
+### ⚔️ War
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 2x
+- Kartenkrieg: Höhere Karte gewinnt
+
+### 💥 Crash
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** Variable (bis 10x)
+- Multiplier steigt, cashout bevor es crasht!
+
+### 💣 Mines
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** Exponentiell steigend
+- 5x5 Grid, vermeide Minen
+- 3, 5, 7 oder 10 Minen wählbar
+
+### 🗼 Tower
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** +0.5x pro Level
+- Klettere den Turm hoch
+- 6, 8 oder 10 Levels
+
+### 🎯 Plinko
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 0.5x bis 100x
+- Ball fällt durch Pins
+- 11 Multiplikator-Slots
+
+### 🎡 Wheel of Fortune
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 2x bis 50x (oder Bankrott)
+- Drehe das Glücksrad
+- 12 Segmente
+
+### 🔢 Keno
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 2x bis 500x
+- Wähle 3, 5, 7 oder 10 Zahlen
+- 20 Zahlen werden gezogen
+
+### 🎫 Scratch Cards
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 2x bis 100x
+- Rubbellose: Finde 3 gleiche Symbole
+- 9 Felder zum Aufdecken
+
+### 🐴 Horse Racing
+- **Einsatz:** 1-10 Diamanten
+- **Gewinn:** 4x
+- 4 Pferde im Rennen
+- Animiertes Rennen
+
+## 📊 Statistik
+
+- **16 Spiele** insgesamt
+- **~80 KB** Code
+- **4700+ Zeilen** Lua-Code
+- **Unendliche** Spielmöglichkeiten! 🎰
 
 ## 📝 Entwickelt mit
 
 - ComputerCraft: Tweaked
 - Advanced Peripherals
+- Minecraft 1.21.1
+- All the Mods 10 Version 5.0
 
 ---
-**Viel Glück beim Spielen! 🍀**
+**Viel Glück beim Spielen! 🎰💎🍀**
