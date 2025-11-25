@@ -36,8 +36,12 @@ Ein vollständiges Casino-System für Minecraft 1.21.1 mit dem Modpack "All the 
 - **Automatisches Inventar-Management** mit RS Bridge
 - **Vollständige Touch-Steuerung** (keine Slider!)
 - **Player Detection** mit Namensauswahl (15 Blöcke Reichweite)
-- **Diamant-Einsätze** (1-10 Diamanten pro Spiel)
+- **💎 Unbegrenzte Einsätze** - Setze so viele Diamanten ein wie du hast!
+  - Schnellwahl: 1, 5, 10, 25, 50, 100, 500
+  - +/- Buttons für präzise Anpassung
+  - "ALLES" Button für All-In
 - **Animationen** in allen Spielen
+- **⚡ Ein-Klick-Installation** mit automatischem Installer
 - **Auto-Start** beim Booten
 
 ### 🏆 Progression & Belohnungen:
@@ -73,16 +77,25 @@ Ein vollständiges Casino-System für Minecraft 1.21.1 mit dem Modpack "All the 
 
 ## 📥 Installation
 
-1. Alle Dateien in einen Advanced Computer kopieren
-2. Hauptprogramm starten: `casino`
+### ⚡ Automatische Installation (Empfohlen):
 
 ```bash
-# Auf dem Computer:
-cd /
-edit startup.lua
-# Füge ein: shell.run("casino")
-reboot
+# Auf dem Advanced Computer:
+pastebin get CODE installer
+installer
 ```
+
+Der Installer lädt automatisch alle 21 Dateien herunter und richtet alles ein!
+
+### 📋 Manuelle Installation:
+
+1. Erstelle das games-Verzeichnis: `mkdir games`
+2. Kopiere alle 21 Dateien in den Computer
+3. Starte das Casino: `casino`
+
+### 🔧 Auto-Start einrichten:
+
+Die `startup.lua` wird automatisch installiert und startet das Casino beim Booten!
 
 ## 🎮 Bedienung
 
