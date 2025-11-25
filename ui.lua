@@ -203,56 +203,135 @@ function UI.drawList(title, items, startY, maxVisible)
     return buttons
 end
 
--- Geld-Auswahl (1-10 Diamanten)
+-- Geld-Auswahl (Unbegrenzt basierend auf Balance)
 function UI.selectAmount(title, minAmount, maxAmount)
     minAmount = minAmount or 1
-    maxAmount = maxAmount or 10
+    maxAmount = maxAmount or 10000
 
-    UI.clear()
-    UI.drawTitle(title)
+    local currentAmount = minAmount
 
-    local buttons = {}
-    local cols = 5
-    local rows = 2
-    local buttonSize = 6
-    local spacingX = 3
-    local spacingY = 2
-    local startX = math.floor((UI.width - (cols * buttonSize + (cols - 1) * spacingX)) / 2)
-    local startY = 8
+    while true do
+        UI.clear()
+        UI.drawTitle(title)
 
-    local amount = 1
-    for row = 0, rows - 1 do
-        for col = 0, cols - 1 do
-            if amount <= maxAmount then
-                local x = startX + col * (buttonSize + spacingX)
-                local y = startY + row * (buttonSize + spacingY)
+        -- Aktueller Betrag
+        UI.centerText(6, "Einsatz:", colors.white)
+        UI.centerText(8, tostring(currentAmount) .. " Diamanten", colors.yellow)
+        UI.centerText(10, "Max: " .. maxAmount, colors.gray)
 
-                local button = UI.drawButton(
-                    x, y, buttonSize, buttonSize,
-                    tostring(amount),
-                    UI.colors.gold,
-                    colors.black
-                )
-                button.amount = amount
+        local buttons = {}
+        local y = 13
+
+        -- Schnellwahl-Buttons (abhängig von maxAmount)
+        local quickAmounts = {}
+        if maxAmount >= 1 then table.insert(quickAmounts, 1) end
+        if maxAmount >= 5 then table.insert(quickAmounts, 5) end
+        if maxAmount >= 10 then table.insert(quickAmounts, 10) end
+        if maxAmount >= 25 then table.insert(quickAmounts, 25) end
+        if maxAmount >= 50 then table.insert(quickAmounts, 50) end
+        if maxAmount >= 100 then table.insert(quickAmounts, 100) end
+        if maxAmount >= 500 then table.insert(quickAmounts, 500) end
+
+        -- Schnellwahl anzeigen
+        if #quickAmounts > 0 then
+            UI.centerText(y, "Schnellwahl:", colors.white)
+            y = y + 2
+
+            local buttonWidth = 8
+            local spacing = 2
+            local totalWidth = #quickAmounts * buttonWidth + (#quickAmounts - 1) * spacing
+            local startX = math.floor((UI.width - totalWidth) / 2)
+
+            for i, amount in ipairs(quickAmounts) do
+                local x = startX + (i - 1) * (buttonWidth + spacing)
+                local button = UI.drawButton(x, y, buttonWidth, 3, tostring(amount), colors.blue, colors.white)
+                button.action = "set"
+                button.value = amount
                 table.insert(buttons, button)
-                amount = amount + 1
             end
+
+            y = y + 5
+        end
+
+        -- +/- Buttons
+        UI.centerText(y, "Anpassen:", colors.white)
+        y = y + 2
+
+        local adjustButtons = {
+            {text = "-10", value = -10, color = colors.red},
+            {text = "-1", value = -1, color = colors.orange},
+            {text = "+1", value = 1, color = colors.lime},
+            {text = "+10", value = 10, color = colors.green}
+        }
+
+        local buttonWidth = 8
+        local spacing = 2
+        local totalWidth = #adjustButtons * buttonWidth + (#adjustButtons - 1) * spacing
+        local startX = math.floor((UI.width - totalWidth) / 2)
+
+        for i, btn in ipairs(adjustButtons) do
+            local x = startX + (i - 1) * (buttonWidth + spacing)
+            local button = UI.drawButton(x, y, buttonWidth, 3, btn.text, btn.color, colors.white)
+            button.action = "adjust"
+            button.value = btn.value
+            table.insert(buttons, button)
+        end
+
+        y = y + 5
+
+        -- Alles einsetzen Button
+        local allInButton = UI.drawButton(
+            math.floor(UI.width / 2) - 15,
+            y,
+            15, 3,
+            "ALLES",
+            colors.yellow,
+            colors.black
+        )
+        allInButton.action = "all"
+        table.insert(buttons, allInButton)
+
+        -- Bestätigen Button
+        local confirmButton = UI.drawButton(
+            math.floor(UI.width / 2) + 2,
+            y,
+            15, 3,
+            "OK",
+            colors.lime,
+            colors.white
+        )
+        confirmButton.action = "confirm"
+        table.insert(buttons, confirmButton)
+
+        y = y + 4
+
+        -- Zurück Button
+        local backButton = UI.drawButton(
+            math.floor(UI.width / 2) - 10,
+            y,
+            20, 3,
+            "Zurueck",
+            colors.red,
+            colors.white
+        )
+        backButton.action = "back"
+        table.insert(buttons, backButton)
+
+        local choice, button = UI.waitForTouch(buttons)
+
+        if button.action == "set" then
+            currentAmount = math.min(button.value, maxAmount)
+        elseif button.action == "adjust" then
+            currentAmount = currentAmount + button.value
+            currentAmount = math.max(minAmount, math.min(currentAmount, maxAmount))
+        elseif button.action == "all" then
+            currentAmount = maxAmount
+        elseif button.action == "confirm" then
+            return {{amount = currentAmount}}
+        elseif button.action == "back" then
+            return {{amount = 0}}
         end
     end
-
-    -- Zurück-Button
-    local backButton = UI.drawButton(
-        math.floor(UI.width / 2) - 10,
-        startY + rows * (buttonSize + spacingY) + 3,
-        20, 3,
-        "Zurueck",
-        UI.colors.danger,
-        UI.colors.text
-    )
-    backButton.amount = 0
-    table.insert(buttons, backButton)
-
-    return buttons
 end
 
 -- Diamanten-Anzeige
