@@ -12,6 +12,13 @@ function Inventory.init(rsBridge)
     if not rsBridge then
         error("RS Bridge nicht gefunden! Bitte unter dem Computer platzieren.")
     end
+
+    -- Spieler-Kiste (direkt vor dem Computer, NICHT im RS-Netzwerk)
+    Inventory.playerChest = peripheral.wrap(Inventory.CHEST_DIRECTION)
+    if not Inventory.playerChest then
+        print("WARNUNG: Keine Kiste an 'front' gefunden!")
+    end
+
     return Inventory
 end
 
@@ -67,7 +74,8 @@ function Inventory.getItem(itemName)
 end
 
 -- Diamanten im Netzwerk zählen (direkte Abfrage statt Loop über alle Items)
-function Inventory.countDiamonds()
+-- HINWEIS: Dies zählt Diamanten im RS-Netzwerk (Casino-Bank)
+function Inventory.countNetworkDiamonds()
     if not Inventory.bridge then
         return 0
     end
@@ -80,6 +88,110 @@ function Inventory.countDiamonds()
 
     -- Kompatibilität: res.amount oder res.count
     return item.amount or item.count or 0
+end
+
+-- Diamanten in der Spieler-Kiste zählen (front)
+-- Dies ist die Balance des Spielers!
+function Inventory.countPlayerDiamonds()
+    if not Inventory.playerChest then
+        print("WARNUNG: Keine Spieler-Kiste gefunden!")
+        return 0
+    end
+
+    local totalDiamonds = 0
+
+    -- Durchsuche alle Slots der Kiste
+    for slot = 1, Inventory.playerChest.size() do
+        local item = Inventory.playerChest.getItemDetail(slot)
+        if item and item.name == "minecraft:diamond" then
+            totalDiamonds = totalDiamonds + item.count
+        end
+    end
+
+    return totalDiamonds
+end
+
+-- Hauptfunktion: Spieler-Balance abrufen (aus der Front-Kiste)
+function Inventory.countDiamonds()
+    return Inventory.countPlayerDiamonds()
+end
+
+-- Diamanten aus der Spieler-Kiste nehmen (Verlust)
+-- Transferiert Diamanten aus der Front-Kiste ins RS-Netzwerk (Casino-Bank)
+function Inventory.takeFromPlayer(amount)
+    if not Inventory.playerChest or not Inventory.bridge then
+        print("WARNUNG: Kann Diamanten nicht transferieren - Kiste oder Bridge fehlt")
+        return false
+    end
+
+    -- Prüfe ob genug Diamanten vorhanden sind
+    local available = Inventory.countPlayerDiamonds()
+    if available < amount then
+        print("WARNUNG: Nicht genug Diamanten in Spieler-Kiste")
+        return false
+    end
+
+    -- Importiere Diamanten aus der Front-Kiste ins RS-Netzwerk
+    local success, imported = pcall(function()
+        return Inventory.bridge.importItem(
+            {name = "minecraft:diamond", count = amount},
+            Inventory.CHEST_DIRECTION
+        )
+    end)
+
+    if not success or not imported or imported < amount then
+        print("FEHLER: Konnte Diamanten nicht aus Spieler-Kiste nehmen")
+        return false
+    end
+
+    return true
+end
+
+-- Diamanten zur Spieler-Kiste hinzufügen (Gewinn)
+-- Transferiert Diamanten aus dem RS-Netzwerk (Casino-Bank) in die Front-Kiste
+function Inventory.giveToPlayer(amount)
+    if not Inventory.playerChest or not Inventory.bridge then
+        print("WARNUNG: Kann Diamanten nicht transferieren - Kiste oder Bridge fehlt")
+        return false
+    end
+
+    -- Prüfe ob genug Diamanten im Casino vorhanden sind
+    local available = Inventory.countNetworkDiamonds()
+    if available < amount then
+        print("WARNUNG: Casino hat nicht genug Diamanten!")
+        return false
+    end
+
+    -- Exportiere Diamanten aus dem RS-Netzwerk in die Front-Kiste
+    local success, exported = pcall(function()
+        return Inventory.bridge.exportItem(
+            {name = "minecraft:diamond", count = amount},
+            Inventory.CHEST_DIRECTION
+        )
+    end)
+
+    if not success or not exported or exported < amount then
+        print("FEHLER: Konnte Diamanten nicht zur Spieler-Kiste hinzufügen")
+        return false
+    end
+
+    return true
+end
+
+-- Balance synchronisieren: Aktualisiere physische Diamanten basierend auf Balance-Änderung
+function Inventory.syncBalance(oldBalance, newBalance)
+    local difference = newBalance - oldBalance
+
+    if difference > 0 then
+        -- Spieler hat gewonnen - Diamanten hinzufügen
+        return Inventory.giveToPlayer(difference)
+    elseif difference < 0 then
+        -- Spieler hat verloren - Diamanten nehmen
+        return Inventory.takeFromPlayer(math.abs(difference))
+    end
+
+    -- Keine Änderung
+    return true
 end
 
 -- Diamanten aus dem Netzwerk nehmen
@@ -238,10 +350,22 @@ end
 function Inventory.initSimple()
     Inventory.simpleMode = true
     Inventory.virtualBalance = 100 -- Start mit 100 Diamanten für Tests
+
+    -- Versuche trotzdem die Spieler-Kiste zu finden
+    Inventory.playerChest = peripheral.wrap(Inventory.CHEST_DIRECTION)
+    if not Inventory.playerChest then
+        print("WARNUNG: Keine Kiste an 'front' gefunden! Verwende virtuelles Balance-System.")
+    end
+
     return Inventory
 end
 
 function Inventory.countDiamondsSimple()
+    -- Wenn Spieler-Kiste verfügbar ist, verwende sie
+    if Inventory.playerChest then
+        return Inventory.countPlayerDiamonds()
+    end
+    -- Sonst virtuelles Balance-System
     return Inventory.virtualBalance or 0
 end
 

@@ -390,6 +390,21 @@ local function main()
                         playerBalance = modules.games[selectedGame].play(playerName, playerBalance)
                         local balanceAfter = playerBalance
 
+                        -- Physische Diamanten synchronisieren
+                        if balanceBefore ~= balanceAfter then
+                            local syncSuccess = inventory.syncBalance(balanceBefore, balanceAfter)
+                            if not syncSuccess then
+                                ui.clear()
+                                ui.drawTitle("FEHLER")
+                                ui.centerText(10, "Konnte Diamanten nicht transferieren!", colors.red)
+                                ui.centerText(12, "Balance wird zurückgesetzt.", colors.yellow)
+                                sleep(3)
+                                playerBalance = balanceBefore
+                                -- Überspringe Spiel-Recording wenn Sync fehlschlägt
+                                goto continue
+                            end
+                        end
+
                         -- Spiel-Ergebnis in Datenbank speichern
                         local bet = math.abs(balanceAfter - balanceBefore)
                         local won = balanceAfter > balanceBefore
@@ -406,7 +421,10 @@ local function main()
                                 ui.centerText(10, "JACKPOT GEWONNEN!", colors.yellow)
                                 ui.centerText(12, jackpotAmount .. " DIAMANTEN!", colors.lime)
                                 sleep(5)
+                                local oldJackpotBalance = playerBalance
                                 playerBalance = playerBalance + jackpotAmount
+                                -- Jackpot-Diamanten zum Spieler transferieren
+                                inventory.syncBalance(oldJackpotBalance, playerBalance)
                             end
 
                             -- Achievement-Benachrichtigungen
@@ -432,6 +450,8 @@ local function main()
                             sleep(3)
                             playing = false
                         end
+
+                        ::continue::
                     end
 
                 elseif selectedAction == "stats" then
@@ -446,7 +466,10 @@ local function main()
                 elseif selectedAction == "daily" then
                     local bonus = features.showDailyBonus(playerName)
                     if bonus > 0 then
+                        local oldDailyBalance = playerBalance
                         playerBalance = playerBalance + bonus
+                        -- Daily Bonus Diamanten zum Spieler transferieren
+                        inventory.syncBalance(oldDailyBalance, playerBalance)
                     end
 
                 elseif selectedAction == "quests" then
