@@ -55,13 +55,12 @@ end
 
 -- Einsatz wählen
 function Tower.selectBet(maxBet)
-    local buttons = Tower.ui.selectAmount(
+    local result = Tower.ui.selectAmount(
         "TOWER - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Tower.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Schwierigkeit wählen

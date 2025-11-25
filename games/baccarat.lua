@@ -64,13 +64,12 @@ end
 
 -- Einsatz wählen
 function Baccarat.selectBet(maxBet)
-    local buttons = Baccarat.ui.selectAmount(
+    local result = Baccarat.ui.selectAmount(
         "BACCARAT - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Baccarat.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Wett-Typ wählen

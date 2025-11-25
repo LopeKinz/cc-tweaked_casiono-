@@ -83,14 +83,13 @@ end
 
 -- Einsatz wählen
 function Blackjack.selectBet(maxBet)
-    local buttons = Blackjack.ui.selectAmount(
+    local result = Blackjack.ui.selectAmount(
         "BLACKJACK - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
 
-    local choice, button = Blackjack.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Eine Runde spielen

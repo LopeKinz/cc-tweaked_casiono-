@@ -67,14 +67,13 @@ end
 
 -- Einsatz wählen
 function Dice.selectBet(maxBet)
-    local buttons = Dice.ui.selectAmount(
+    local result = Dice.ui.selectAmount(
         "DICE - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
 
-    local choice, button = Dice.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Wett-Typ auswählen

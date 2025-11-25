@@ -65,13 +65,12 @@ end
 
 -- Einsatz wählen
 function Wheel.selectBet(maxBet)
-    local buttons = Wheel.ui.selectAmount(
+    local result = Wheel.ui.selectAmount(
         "WHEEL OF FORTUNE - Einsatz",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Wheel.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Rad drehen

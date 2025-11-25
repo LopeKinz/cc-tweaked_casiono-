@@ -57,14 +57,13 @@ end
 
 -- Einsatz wählen
 function CoinFlip.selectBet(maxBet)
-    local buttons = CoinFlip.ui.selectAmount(
+    local result = CoinFlip.ui.selectAmount(
         "COIN FLIP - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
 
-    local choice, button = CoinFlip.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Seite wählen

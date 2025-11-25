@@ -28,8 +28,8 @@ local files = {
     "games/horses.lua"
 }
 
--- Farben
-local colors = {
+-- Farben (Custom Color Scheme)
+local colorScheme = {
     success = colors.lime,
     error = colors.red,
     info = colors.yellow,
@@ -74,7 +74,7 @@ local function install()
     print("╚════════════════════════════════════════╝")
     print("")
 
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("Dieser Installer wird alle Casino-Dateien")
     print("automatisch herunterladen und einrichten.")
     print("")
@@ -83,9 +83,9 @@ local function install()
     print("- Internet-Verbindung")
     print("")
 
-    term.setTextColor(colors.info)
+    term.setTextColor(colorScheme.info)
     write("Fortfahren? (j/n): ")
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
 
     local input = read()
     if input ~= "j" and input ~= "J" then
@@ -96,7 +96,7 @@ local function install()
 
     -- Prüfe HTTP
     if not http then
-        term.setTextColor(colors.error)
+        term.setTextColor(colorScheme.error)
         print("")
         print("FEHLER: HTTP API ist nicht aktiviert!")
         print("Bitte aktiviere HTTP in der CC:Tweaked Config.")
@@ -104,20 +104,20 @@ local function install()
     end
 
     print("")
-    term.setTextColor(colors.info)
+    term.setTextColor(colorScheme.info)
     print("Starte Installation...")
     print("")
 
     -- Erstelle Verzeichnisse
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("[1/3] Erstelle Verzeichnisse...")
     ensureDirectory("games")
-    term.setTextColor(colors.success)
+    term.setTextColor(colorScheme.success)
     print("      ✓ Verzeichnisse erstellt")
     print("")
 
     -- Download Dateien
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("[2/3] Lade Dateien herunter...")
     print("")
 
@@ -131,30 +131,30 @@ local function install()
         local success = downloadFile(url, file)
 
         if success then
-            term.setTextColor(colors.success)
+            term.setTextColor(colorScheme.success)
             print("✓")
             successCount = successCount + 1
         else
-            term.setTextColor(colors.error)
+            term.setTextColor(colorScheme.error)
             print("✗")
             failCount = failCount + 1
         end
 
-        term.setTextColor(colors.text)
+        term.setTextColor(colorScheme.text)
     end
 
     print("")
 
     -- Zusammenfassung
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("[3/3] Installation abgeschlossen!")
     print("")
 
     if failCount == 0 then
-        term.setTextColor(colors.success)
+        term.setTextColor(colorScheme.success)
         print("✓ Alle " .. successCount .. " Dateien erfolgreich installiert!")
     else
-        term.setTextColor(colors.info)
+        term.setTextColor(colorScheme.info)
         print("⚠ " .. successCount .. " Dateien installiert, " .. failCount .. " fehlgeschlagen")
         print("")
         print("Fehlgeschlagene Dateien koennen manuell")
@@ -163,7 +163,7 @@ local function install()
     end
 
     print("")
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("═══════════════════════════════════════════")
     print("")
     print("Installation abgeschlossen!")
@@ -178,10 +178,10 @@ local function install()
     print("   - 1x Double Chest (vorne)")
     print("")
     print("2. Starte das Casino:")
-    term.setTextColor(colors.info)
+    term.setTextColor(colorScheme.info)
     print("   casino")
     print("")
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("3. Optional: Auto-Start einrichten")
     print("   (bereits als startup.lua installiert)")
     print("")
@@ -203,14 +203,14 @@ local function manualInstall()
     print("╚════════════════════════════════════════╝")
     print("")
 
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("Fuer manuelle Installation:")
     print("")
     print("1. Erstelle das games-Verzeichnis:")
-    term.setTextColor(colors.info)
+    term.setTextColor(colorScheme.info)
     print("   mkdir games")
     print("")
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("2. Kopiere alle Dateien in den Computer")
     print("")
     print("3. Benoetigte Dateien:")
@@ -237,7 +237,7 @@ local function main()
     print("╚════════════════════════════════════════╝")
     print("")
 
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
     print("Waehle Installations-Methode:")
     print("")
     print("1. Automatisch (empfohlen)")
@@ -250,9 +250,9 @@ local function main()
     print("3. Abbrechen")
     print("")
 
-    term.setTextColor(colors.info)
+    term.setTextColor(colorScheme.info)
     write("Auswahl (1-3): ")
-    term.setTextColor(colors.text)
+    term.setTextColor(colorScheme.text)
 
     local choice = read()
 

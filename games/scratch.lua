@@ -59,13 +59,12 @@ end
 
 -- Einsatz wählen
 function Scratch.selectBet(maxBet)
-    local buttons = Scratch.ui.selectAmount(
+    local result = Scratch.ui.selectAmount(
         "SCRATCH CARDS - Einsatz",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
-    local choice, button = Scratch.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Rubbellos spielen

@@ -65,12 +65,12 @@ function Roulette.play(playerName, playerBalance)
             sleep(2)
         else
             -- Wett-Typ wählen
-            local betType, betValue = Roulette.selectBetType()
+            local betType, betValue, betPayout = Roulette.selectBetType()
             if not betType then
                 -- Zurück wurde gedrückt
             else
                 -- Spiel starten
-                local won, payout = Roulette.spin(bet, betType, betValue)
+                local won, payout = Roulette.spin(bet, betType, betValue, betPayout)
 
                 -- Balance aktualisieren
                 if won then
@@ -98,14 +98,13 @@ end
 
 -- Einsatz wählen
 function Roulette.selectBet(maxBet)
-    local buttons = Roulette.ui.selectAmount(
+    local result = Roulette.ui.selectAmount(
         "ROULETTE - Einsatz waehlen",
         1,
-        math.min(10, maxBet)
+        maxBet
     )
 
-    local choice, button = Roulette.ui.waitForTouch(buttons)
-    return button.amount
+    return result[1].amount
 end
 
 -- Wett-Typ auswählen
@@ -135,7 +134,7 @@ function Roulette.selectBetType()
     if option.type == "number" then
         local number = Roulette.selectNumber()
         if number == nil then
-            return nil, nil -- Zurück
+            return nil, nil, nil -- Zurück
         end
         return option.type, number, option.payout
     end
