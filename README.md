@@ -1,71 +1,73 @@
 # Minecraft Casino - ComputerCraft: Tweaked
 
-Ein vollständiges Casino-System für Minecraft 1.21.1 mit dem Modpack "All the Mods 10" (Version 5.0).
+A complete casino system for Minecraft 1.21.1 with the "All the Mods 10" modpack (Version 5.0).
+
+**[🇩🇪 Deutsche Version](README_DE.md)**
 
 ## 🎰 Features
 
-### **16 verschiedene Casino-Spiele!**
+### **16 Different Casino Games!**
 
-#### 🎰 Klassische Casino-Spiele:
-- **Slot Machine** - 3 Walzen, 6 Symbole, bis zu 100x Gewinn
-- **Roulette** - Europäisches Roulette mit allen Wettoptionen
-- **Blackjack** - Hit, Stand, Double Down gegen den Dealer
-- **Baccarat** - Player, Banker oder Tie
+#### 🎰 Classic Casino Games:
+- **Slot Machine** - 3 reels, 6 symbols, up to 100x win
+- **Roulette** - European roulette with all betting options
+- **Blackjack** - Hit, Stand, Double Down against dealer
+- **Baccarat** - Player, Banker or Tie
 
-#### 🎲 Würfel & Münzen:
-- **Coin Flip** - Kopf oder Zahl, einfach und schnell
-- **Dice** - 2 Würfel mit 6 verschiedenen Wettoptionen
+#### 🎲 Dice & Coins:
+- **Coin Flip** - Heads or tails, simple and fast
+- **Dice** - 2 dice with 6 betting options
 
-#### 🃏 Kartenspiele:
-- **High/Low** - Rate höher oder niedriger, baue Streak auf
-- **War** - Klassischer Kartenkrieg
+#### 🃏 Card Games:
+- **High/Low** - Guess higher or lower, build streak
+- **War** - Classic card war
 
-#### 🚀 Moderne Casino-Spiele:
-- **Crash** - Multiplier steigt, cashout bevor es crasht!
-- **Mines** - Finde sichere Felder, vermeide Minen
-- **Tower** - Klettere den Turm hoch, wähle den richtigen Weg
+#### 🚀 Modern Casino Games:
+- **Crash** - Multiplier rises, cashout before crash!
+- **Mines** - Find safe fields, avoid mines
+- **Tower** - Climb the tower, choose the right path
 
-#### 🎪 Spezial-Spiele:
-- **Plinko** - Ball fällt durch Pins, Multiplikatoren bis 100x
-- **Wheel of Fortune** - Drehe das Glücksrad
-- **Keno** - Zahlen-Lotterie, wähle 3-10 Zahlen
-- **Scratch Cards** - Rubbellose, finde 3 gleiche Symbole
-- **Horse Racing** - Wette auf Pferde im Rennen
+#### 🎪 Special Games:
+- **Plinko** - Ball falls through pins, multipliers up to 100x
+- **Wheel of Fortune** - Spin the wheel
+- **Keno** - Number lottery, choose 3-10 numbers
+- **Scratch Cards** - Scratch cards, find 3 matching symbols
+- **Horse Racing** - Bet on horses in race
 
-### 🌟 System-Features:
-- **Automatisches Inventar-Management** mit RS Bridge
-- **Vollständige Touch-Steuerung** (keine Slider!)
-- **Player Detection** mit Namensauswahl (15 Blöcke Reichweite)
-- **💎 Unbegrenzte Einsätze** - Setze so viele Diamanten ein wie du hast!
-  - Schnellwahl: 1, 5, 10, 25, 50, 100, 500
-  - +/- Buttons für präzise Anpassung
-  - "ALLES" Button für All-In
-- **Animationen** in allen Spielen
-- **⚡ Ein-Klick-Installation** mit automatischem Installer
-- **Auto-Start** beim Booten
+### 🌟 System Features:
+- **Automatic Inventory Management** with RS Bridge
+- **Complete Touch Control** (no sliders!)
+- **Player Detection** with name selection (15 block range)
+- **💎 Unlimited Bets** - Bet as many diamonds as you have!
+  - Quick select: 1, 5, 10, 25, 50, 100, 500
+  - +/- buttons for precise adjustment
+  - "ALL IN" button
+- **Animations** in all games
+- **⚡ One-Click Installation** with automatic installer
+- **Auto-Start** on boot
 
-### 🏆 Progression & Belohnungen:
-- **📊 Leaderboard** - Top 10 Spieler in 4 Kategorien (Siege, Level, Größter Gewinn, Total Gewonnen)
-- **🎖️ Achievements** - 10 freischaltbare Erfolge mit Benachrichtigungen
-- **💰 Daily Bonus** - Tägliche Diamanten (5 + Streak-Bonus, max 15)
-- **📈 Level-System** - XP sammeln (1 XP pro Diamant Einsatz), Level aufsteigen
-- **🎰 Jackpot** - Progressiver Jackpot mit 0.1% Gewinnchance pro Spiel
-- **📝 Tägliche Quests** - 3 Quests pro Tag mit Diamanten-Belohnungen
-- **📊 Detaillierte Statistiken** - Tracking aller Spiele, Gewinnraten, Profit
-- **📜 Spiel-Verlauf** - Letzte 20 Spiele anzeigen
-- **🏅 Spieler-Ränge** - Globale Rangliste mit Position
-- **💾 Persistente Daten** - Alle Daten werden gespeichert
+### 🏆 Progression & Rewards:
+- **📊 Leaderboard** - Top 10 players in 4 categories (Wins, Level, Biggest Win, Total Won)
+- **🎖️ Achievements** - 10 unlockable achievements with notifications
+- **💰 Daily Bonus** - Daily diamonds (5 + streak bonus, max 15)
+- **📈 Level System** - Collect XP (1 XP per diamond bet), level up
+- **🎰 Jackpot** - Progressive jackpot with 0.1% win chance per game
+- **📝 Daily Quests** - 3 quests per day with diamond rewards
+- **📊 Detailed Statistics** - Track all games, win rates, profit
+- **📜 Game History** - Show last 20 games
+- **🏅 Player Ranks** - Global leaderboard with position
+- **💾 Persistent Data** - All data is saved
 
-## 🏗️ Hardware-Setup
+## 🏗️ Hardware Setup
 
-### Komponenten:
+### Components:
 - **1x Advanced Computer**
-- **20x Advanced Monitor** (4x5 Anordnung) - **rechts vom Computer**
-- **1x RS Bridge** - **unter dem Computer**
-- **1x Player Detector** - **auf dem Computer**
-- **1x Double Chest** - **vor dem Computer**
+- **20x Advanced Monitor** (4x5 arrangement) - **right of computer**
+- **1x RS Bridge** - **below computer**
+- **1x Player Detector** - **on top of computer**
+- **1x Double Chest** - **in front of computer**
 
-### Aufbau:
+### Setup:
 ```
              [Monitor Monitor Monitor Monitor]
              [Monitor Monitor Monitor Monitor]
@@ -77,57 +79,59 @@ Ein vollständiges Casino-System für Minecraft 1.21.1 mit dem Modpack "All the 
 
 ## 📥 Installation
 
-### ⚡ Automatische Installation (Empfohlen):
+### ⚡ Automatic Installation (Recommended):
 
 ```bash
-# Auf dem Advanced Computer:
+# On the Advanced Computer:
 wget https://raw.githubusercontent.com/LopeKinz/cc-tweaked_casiono-/main/installer.lua installer.lua
 installer
 ```
 
-Oder als One-Liner:
+Or as one-liner:
 ```bash
 wget run https://raw.githubusercontent.com/LopeKinz/cc-tweaked_casiono-/main/installer.lua
 ```
 
-Der Installer lädt automatisch alle 21 Dateien herunter und richtet alles ein!
+The installer automatically downloads all 21 files and sets everything up!
 
-### 📋 Manuelle Installation:
+### 📋 Manual Installation:
 
-1. Erstelle das games-Verzeichnis: `mkdir games`
-2. Kopiere alle 21 Dateien in den Computer
-3. Starte das Casino: `casino`
+1. Create games directory: `mkdir games`
+2. Copy all 21 files to the computer
+3. Start casino: `casino`
 
-### 🔧 Auto-Start einrichten:
+### 🔧 Auto-Start Setup:
 
-Die `startup.lua` wird automatisch installiert und startet das Casino beim Booten!
+The `startup.lua` is automatically installed and starts the casino on boot!
 
-## 🎮 Bedienung
+## 🎮 Usage
 
-1. System erkennt automatisch Spieler in 15 Blöcken Reichweite
-2. Spieler wählt seinen Namen aus der Liste
-3. Diamanten in die Truhe legen
-4. Spiel auswählen und spielen!
+1. System automatically detects players within 15 blocks
+2. Player selects their name from list
+3. Put diamonds in chest
+4. Select game and play!
 
-## 📁 Dateistruktur
+## 📁 File Structure
 
 ```
 /
-├── casino.lua          # Hauptprogramm
-├── ui.lua              # UI-Bibliothek für Touch-Steuerung
-├── inventory.lua       # Inventar-Management (RS Bridge)
+├── casino.lua          # Main program
+├── ui.lua              # UI library for touch control
+├── inventory.lua       # Inventory management (RS Bridge)
+├── database.lua        # Player database & statistics
+├── features.lua        # Progression features
 └── games/
     ├── slots.lua       # Slot Machine
     ├── roulette.lua    # Roulette
     ├── blackjack.lua   # Blackjack
     ├── baccarat.lua    # Baccarat
     ├── coinflip.lua    # Coin Flip
-    ├── dice.lua        # Würfel
+    ├── dice.lua        # Dice
     ├── highlow.lua     # High/Low
-    ├── war.lua         # War (Kartenkrieg)
+    ├── war.lua         # War
     ├── crash.lua       # Crash
     ├── mines.lua       # Mines
-    ├── tower.lua       # Tower Climb
+    ├── tower.lua       # Tower
     ├── plinko.lua      # Plinko
     ├── wheel.lua       # Wheel of Fortune
     ├── keno.lua        # Keno
@@ -135,124 +139,164 @@ Die `startup.lua` wird automatisch installiert und startet das Casino beim Boote
     └── horses.lua      # Horse Racing
 ```
 
-## 🔧 Konfiguration
+## 🔧 Configuration
 
-Die Peripheriegeräte werden automatisch erkannt:
-- RS Bridge: `bottom` (unter dem Computer)
-- Player Detector: `top` (auf dem Computer)
-- Monitor: `right` (rechts vom Computer)
-- Chest: wird über RS Bridge gesteuert
+Peripheral devices are automatically detected:
+- RS Bridge: `bottom` (below computer)
+- Player Detector: `top` (on computer)
+- Monitor: `right` (right of computer)
+- Chest: controlled via RS Bridge
 
-## 💎 Diamanten-System
+## 💎 Diamond System
 
-- Diamanten werden automatisch aus der Truhe gezählt
-- Einsätze werden bei Verlust eingezogen
-- Gewinne werden automatisch ausgezahlt
+- Diamonds are automatically counted from chest
+- Bets are collected on loss
+- Wins are automatically paid out
 
-## 🎲 Spiel-Details
+## 🎲 Game Details
 
 ### 🎰 Slot Machine
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** Bis zu 100x bei 3x Dollar
-- 3 Walzen mit 6 verschiedenen Symbolen
+- **Bet:** 1-∞ diamonds
+- **Win:** Up to 100x with 3x dollar
+- 3 reels with 6 different symbols
 
 ### 🎡 Roulette
-- **Einsatz:** 1-10 Diamanten
-- **Wetten:** Rot/Schwarz (2x), Gerade/Ungerade (2x), Zahlen (36x)
-- Zahlen 0-36
+- **Bet:** 1-∞ diamonds
+- **Bets:** Red/Black (2x), Even/Odd (2x), Numbers (36x)
+- Numbers 0-36
 
 ### 🃏 Blackjack
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 2x (2.5x bei Blackjack)
+- **Bet:** 1-∞ diamonds
+- **Win:** 2x (2.5x on blackjack)
 - Hit, Stand, Double Down
-- Dealer muss unter 17 ziehen
+- Dealer must draw under 17
 
 ### 🎴 Baccarat
-- **Einsatz:** 1-10 Diamanten
-- **Wetten:** Player (2x), Banker (1.95x), Tie (8x)
-- Klassische Baccarat-Regeln
+- **Bet:** 1-∞ diamonds
+- **Bets:** Player (2x), Banker (1.95x), Tie (8x)
+- Classic baccarat rules
 
 ### 🪙 Coin Flip
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 2x
-- Kopf oder Zahl
+- **Bet:** 1-∞ diamonds
+- **Win:** 2x
+- Heads or tails
 
 ### 🎲 Dice
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 2x bis 5x
-- Wettoptionen: 7/11, Gerade/Ungerade, High/Low, Pasch
+- **Bet:** 1-∞ diamonds
+- **Win:** 2x to 5x
+- Betting options: 7/11, Even/Odd, High/Low, Doubles
 
 ### 🃏 High/Low
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** +0.5x pro richtiger Runde
-- Rate ob nächste Karte höher oder niedriger ist
-- Cashout jederzeit möglich
+- **Bet:** 1-∞ diamonds
+- **Win:** +0.5x per correct round
+- Guess if next card is higher or lower
+- Cashout anytime
 
 ### ⚔️ War
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 2x
-- Kartenkrieg: Höhere Karte gewinnt
+- **Bet:** 1-∞ diamonds
+- **Win:** 2x
+- Card war: Higher card wins
 
 ### 💥 Crash
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** Variable (bis 10x)
-- Multiplier steigt, cashout bevor es crasht!
+- **Bet:** 1-∞ diamonds
+- **Win:** Variable (up to 10x)
+- Multiplier rises, cashout before crash!
 
 ### 💣 Mines
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** Exponentiell steigend
-- 5x5 Grid, vermeide Minen
-- 3, 5, 7 oder 10 Minen wählbar
+- **Bet:** 1-∞ diamonds
+- **Win:** Exponentially increasing
+- 5x5 grid, avoid mines
+- 3, 5, 7 or 10 mines selectable
 
 ### 🗼 Tower
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** +0.5x pro Level
-- Klettere den Turm hoch
-- 6, 8 oder 10 Levels
+- **Bet:** 1-∞ diamonds
+- **Win:** +0.5x per level
+- Climb the tower
+- 6, 8 or 10 levels
 
 ### 🎯 Plinko
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 0.5x bis 100x
-- Ball fällt durch Pins
-- 11 Multiplikator-Slots
+- **Bet:** 1-∞ diamonds
+- **Win:** 0.5x to 100x
+- Ball falls through pins
+- 11 multiplier slots
 
 ### 🎡 Wheel of Fortune
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 2x bis 50x (oder Bankrott)
-- Drehe das Glücksrad
-- 12 Segmente
+- **Bet:** 1-∞ diamonds
+- **Win:** 2x to 50x (or bankrupt)
+- Spin the wheel
+- 12 segments
 
 ### 🔢 Keno
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 2x bis 500x
-- Wähle 3, 5, 7 oder 10 Zahlen
-- 20 Zahlen werden gezogen
+- **Bet:** 1-∞ diamonds
+- **Win:** 2x to 500x
+- Choose 3, 5, 7 or 10 numbers
+- 20 numbers are drawn
 
 ### 🎫 Scratch Cards
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 2x bis 100x
-- Rubbellose: Finde 3 gleiche Symbole
-- 9 Felder zum Aufdecken
+- **Bet:** 1-∞ diamonds
+- **Win:** 2x to 100x
+- Scratch cards: Find 3 matching symbols
+- 9 fields to reveal
 
 ### 🐴 Horse Racing
-- **Einsatz:** 1-10 Diamanten
-- **Gewinn:** 4x
-- 4 Pferde im Rennen
-- Animiertes Rennen
+- **Bet:** 1-∞ diamonds
+- **Win:** 4x
+- 4 horses racing
+- Animated race
 
-## 📊 Statistik
+## 📊 Statistics
 
-- **16 Spiele** insgesamt
-- **~80 KB** Code
-- **4700+ Zeilen** Lua-Code
-- **Unendliche** Spielmöglichkeiten! 🎰
+- **16 games** total
+- **~110 KB** code
+- **6000+ lines** of Lua code
+- **Unlimited** possibilities! 🎰
 
-## 📝 Entwickelt mit
+## 🏆 Progression System
+
+### Level System:
+- Earn 1 XP per diamond bet
+- Level up every 100 XP
+- Unlimited levels
+
+### Achievements (10 total):
+1. First Win - Win your first game
+2. 10 Wins - Win 10 games
+3. 50 Wins - Win 50 games
+4. 100 Wins - Win 100 games
+5. 100 Games - Play 100 rounds
+6. Big Win - Win 50+ diamonds
+7. Mega Win - Win 100+ diamonds
+8. Level 5 - Reach level 5
+9. Level 10 - Reach level 10
+10. Loyal Player - 7 day daily streak
+
+### Daily Bonus:
+- Base: 5 diamonds
+- +1 per streak day
+- Maximum: 15 diamonds (10 day streak)
+
+### Quests (3 daily):
+1. Play 10 rounds (10 diamonds)
+2. Win 5 games (15 diamonds)
+3. Play 3x Slots (5 diamonds)
+
+### Jackpot:
+- Starts at 100 diamonds
+- Grows by 5% of each bet
+- 0.1% win chance per game
+- Big animation on win!
+
+## 📝 Developed with
 
 - ComputerCraft: Tweaked
 - Advanced Peripherals
 - Minecraft 1.21.1
 - All the Mods 10 Version 5.0
 
+## 🌐 Languages
+
+- 🇬🇧 **English** (this file)
+- 🇩🇪 **German** → [README_DE.md](README_DE.md)
+
 ---
-**Viel Glück beim Spielen! 🎰💎🍀**
+**Good luck playing! 🎰💎🍀**
