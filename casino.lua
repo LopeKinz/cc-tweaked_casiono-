@@ -16,10 +16,10 @@ local function findPeripherals()
     end
 
     -- RS Bridge finden (unter dem Computer)
-    peripherals.rsBridge = peripheral.find("rsBridge")
+    peripherals.rsBridge = peripheral.find("rs_bridge")
 
     -- Player Detector finden (auf dem Computer)
-    peripherals.playerDetector = peripheral.find("playerDetector")
+    peripherals.playerDetector = peripheral.find("player_detector")
     if not peripherals.playerDetector then
         error("Player Detector nicht gefunden! Bitte auf dem Computer platzieren.")
     end
