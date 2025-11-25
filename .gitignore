@@ -1,0 +1,11 @@
+# ComputerCraft Files
+*.bak
+*~
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
