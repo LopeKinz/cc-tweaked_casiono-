@@ -134,9 +134,7 @@ local function detectPlayers(playerDetector, ui)
     ui.centerText(8, "Suche nach Spielern...", colors.white)
     ui.centerText(10, "Reichweite: 15 Bloecke", colors.gray)
 
-    sleep(1)
-
-    -- Spieler in Reichweite finden
+    -- Spieler in Reichweite finden (kein sleep mehr - schneller!)
     local players = playerDetector.getPlayersInRange(15)
 
     if not players or #players == 0 then
@@ -202,10 +200,7 @@ end
 
 -- ===== SPIELE-MENÜ =====
 local function showGamesMenu(ui)
-    ui.clear()
-    ui.drawTitle("SPIELE")
-
-    -- Spiele-Menü (Alle Spiele!)
+    -- Spiele-Menü (Alle Spiele mit Scroll-Funktion!)
     local options = {
         -- Klassische Casino-Spiele
         {text = "SLOT MACHINE", color = colors.purple, game = "slots"},
@@ -237,8 +232,8 @@ local function showGamesMenu(ui)
         {text = "Zurueck", color = colors.red, game = "back"}
     }
 
-    local buttons = ui.drawMenu("", options, 5)
-    local choice, button = ui.waitForTouch(buttons)
+    -- Verwende scrollbare Menu-Funktion (zeigt 6 Spiele pro Seite)
+    local choice, button = ui.drawMenuScrollable("SPIELE", options, 5, 6)
     return options[choice].game
 end
 
@@ -250,9 +245,7 @@ local function showWelcomeScreen(ui)
     ui.drawBox(1, 1, ui.width, 3, colors.purple)
     ui.centerText(2, "*** CASINO ***", colors.yellow, colors.purple)
 
-    sleep(0.5)
-
-    -- Info
+    -- Info (kein sleep - schneller Start!)
     local y = 5
     local info = {
         "Willkommen im Casino!",
@@ -271,7 +264,7 @@ local function showWelcomeScreen(ui)
         y = y + 1
     end
 
-    sleep(3)
+    sleep(1.5)  -- Reduziert von 3 auf 1.5 Sekunden
 end
 
 -- ===== HAUPT-PROGRAMM =====
@@ -302,7 +295,7 @@ local function main()
                 print("WARNUNG: RS Bridge Health-Check fehlgeschlagen.")
                 print("Grund: " .. tostring(healthMsg))
                 print("Verwende Simple Mode...")
-                sleep(3)
+                -- Kein sleep mehr - schneller Start!
                 peripherals.rsBridge = nil
                 inventory = modules.Inventory.initSimple()
                 inventory.wrap()
@@ -313,14 +306,14 @@ local function main()
             print("WARNUNG: RS Bridge Initialisierung fehlgeschlagen.")
             print("Fehler: " .. tostring(err))
             print("Verwende Simple Mode...")
-            sleep(3)
+            -- Kein sleep mehr - schneller Start!
             peripherals.rsBridge = nil
             inventory = modules.Inventory.initSimple()
             inventory.wrap()
         end
     else
         print("WARNUNG: RS Bridge nicht gefunden. Verwende Simple Mode.")
-        sleep(2)
+        -- Reduziert von 2 auf 0.5 Sekunden
         inventory = modules.Inventory.initSimple()
         inventory.wrap()
     end
@@ -390,18 +383,33 @@ local function main()
                         playerBalance = modules.games[selectedGame].play(playerName, playerBalance)
                         local balanceAfter = playerBalance
 
-                        -- Physische Diamanten synchronisieren
+                        -- Physische Diamanten synchronisieren (IN ECHTZEIT)
                         if balanceBefore ~= balanceAfter then
-                            local syncSuccess = inventory.syncBalance(balanceBefore, balanceAfter)
+                            local syncSuccess, errorMsg = inventory.syncBalance(balanceBefore, balanceAfter)
                             if not syncSuccess then
                                 ui.clear()
-                                ui.drawTitle("FEHLER")
-                                ui.centerText(10, "Konnte Diamanten nicht transferieren!", colors.red)
-                                ui.centerText(12, "Balance wird zurückgesetzt.", colors.yellow)
-                                sleep(3)
+                                ui.drawTitle("FEHLER - DIAMANTEN-TRANSFER")
+                                ui.centerText(8, "Konnte Diamanten nicht transferieren!", colors.red)
+                                ui.centerText(10, "Grund: " .. tostring(errorMsg or "Unbekannt"), colors.yellow)
+                                ui.centerText(12, "", colors.white)
+                                ui.centerText(13, "Mögliche Ursachen:", colors.white)
+                                ui.centerText(14, "- Nicht genug Diamanten im RS-Netzwerk", colors.gray)
+                                ui.centerText(15, "- RS Bridge nicht verbunden", colors.gray)
+                                ui.centerText(16, "- Kiste nicht gefunden", colors.gray)
+                                ui.centerText(18, "Balance wird zurückgesetzt.", colors.yellow)
+                                sleep(5)
                                 playerBalance = balanceBefore
                                 -- Überspringe Spiel-Recording wenn Sync fehlschlägt
                                 goto continue
+                            else
+                                -- Erfolgreicher Transfer - zeige Bestätigung
+                                local diff = balanceAfter - balanceBefore
+                                if diff > 0 then
+                                    ui.centerText(20, "+" .. diff .. " Diamanten transferiert!", colors.lime)
+                                elseif diff < 0 then
+                                    ui.centerText(20, math.abs(diff) .. " Diamanten eingezogen!", colors.red)
+                                end
+                                sleep(0.5)
                             end
                         end
 
