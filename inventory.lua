@@ -15,77 +15,79 @@ function Inventory.init(rsBridge)
     return Inventory
 end
 
--- Alle verfügbaren Items im Netzwerk abrufen
-function Inventory.getItems()
+-- Hole ein spezifisches Item aus dem Netzwerk (effizienter als listItems)
+-- Verwendet getItem() statt listItems() für bessere Kompatibilität und Performance
+function Inventory.getItem(itemName)
     if not Inventory.bridge then
-        return {}
+        return nil
     end
 
-    -- Prüfe ob listItems() Methode existiert
-    if type(Inventory.bridge.listItems) ~= "function" then
-        error("RS Bridge hat keine listItems() Methode! Bitte Advanced Peripherals 0.7+ installieren.")
+    -- Prüfe ob getItem() Methode existiert
+    if type(Inventory.bridge.getItem) ~= "function" then
+        error("RS Bridge hat keine getItem() Methode! Bitte Advanced Peripherals 0.7+ installieren.")
     end
 
-    -- Versuche Items abzurufen mit Fehlerbehandlung
+    -- Versuche Item abzurufen mit Fehlerbehandlung
     local success, result = pcall(function()
-        return Inventory.bridge.listItems()
+        return Inventory.bridge.getItem({ name = itemName })
     end)
 
     if not success then
-        error("Fehler beim Abrufen der Items: " .. tostring(result))
+        print("[WARNUNG] getItem fehlgeschlagen: " .. tostring(result))
+        return nil
     end
 
-    return result or {}
+    return result
 end
 
--- Diamanten im Netzwerk zählen
+-- Diamanten im Netzwerk zählen (direkte Abfrage statt Loop über alle Items)
 function Inventory.countDiamonds()
-    local items = Inventory.getItems()
-    local total = 0
-
-    for _, item in pairs(items) do
-        if item.name == "minecraft:diamond" then
-            total = total + item.amount
-        end
+    if not Inventory.bridge then
+        return 0
     end
 
-    return total
+    local item = Inventory.getItem("minecraft:diamond")
+
+    if not item then
+        return 0  -- Keine Diamanten im Netzwerk
+    end
+
+    -- Kompatibilität: res.amount oder res.count
+    return item.amount or item.count or 0
 end
 
 -- Diamanten aus dem Netzwerk nehmen
 function Inventory.takeDiamonds(amount, targetChest)
     if not Inventory.bridge then
-        return false
+        return 0
     end
 
-    -- Versuche Diamanten aus dem Netzwerk zu exportieren
-    local taken = 0
-    local items = Inventory.getItems()
-
-    for _, item in pairs(items) do
-        if item.name == "minecraft:diamond" then
-            local toTake = math.min(amount - taken, item.amount)
-
-            -- Exportiere in Truhe (Richtung konfigurierbar)
-            local direction = targetChest or Inventory.CHEST_DIRECTION
-
-            -- Korrekte API: exportItem(item: table, direction: string) -> number
-            local exported = Inventory.bridge.exportItem(
-                {name = "minecraft:diamond", count = toTake},
-                direction
-            )
-
-            if exported and exported > 0 then
-                taken = taken + exported
-            end
-
-            if taken >= amount then
-                break
-            end
-        end
+    -- Prüfe erst ob genug Diamanten vorhanden sind
+    local available = Inventory.countDiamonds()
+    if available <= 0 then
+        return 0
     end
 
-    return taken
+    -- Nimm nur so viele wie verfügbar sind
+    local toTake = math.min(amount, available)
+
+    -- Exportiere in Truhe (Richtung konfigurierbar)
+    local direction = targetChest or Inventory.CHEST_DIRECTION
+
+    -- Korrekte API: exportItem(item: table, direction: string) -> number
+    local success, exported = pcall(function()
+        return Inventory.bridge.exportItem(
+            {name = "minecraft:diamond", count = toTake},
+            direction
+        )
+    end)
+
+    if not success then
+        print("[FEHLER] exportItem fehlgeschlagen: " .. tostring(exported))
+        return 0
+    end
+
+    return exported or 0
 end
 
 -- Diamanten ins Netzwerk zurücklegen
@@ -161,13 +163,33 @@ function Inventory.getCasinoBalance()
 end
 
 -- Detaillierte Inventar-Info für Debugging
+-- Hinweis: Diese Funktion verwendet weiterhin listItems() da sie ALLE Items benötigt
 function Inventory.getInventoryDetails()
-    local items = Inventory.getItems()
+    if not Inventory.bridge then
+        return {totalItems = 0, diamonds = 0, otherItems = {}}
+    end
+
     local details = {
         totalItems = 0,
         diamonds = 0,
         otherItems = {}
     }
+
+    -- Nur für Debug-Zwecke: Verwende listItems() um alle Items zu sehen
+    local success, items = pcall(function()
+        return Inventory.bridge.listItems()
+    end)
+
+    if not success or not items then
+        print("[WARNUNG] listItems für Debug fehlgeschlagen")
+        -- Fallback: Nutze getItem für Diamanten
+        local diamondItem = Inventory.getItem("minecraft:diamond")
+        if diamondItem then
+            details.diamonds = diamondItem.amount or diamondItem.count or 0
+            details.totalItems = 1
+        end
+        return details
+    end
 
     for _, item in pairs(items) do
         details.totalItems = details.totalItems + 1
