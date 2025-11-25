@@ -61,6 +61,40 @@ local function ensureDirectory(dir)
     end
 end
 
+-- Funktion zum Löschen aller Casino-Dateien
+local function deleteOldFiles()
+    term.setTextColor(colorScheme.text)
+    print("[1/4] Loesche alte Dateien...")
+    print("")
+
+    local deleteCount = 0
+
+    -- Lösche alle Casino-Dateien
+    for _, file in ipairs(files) do
+        if fs.exists(file) then
+            fs.delete(file)
+            deleteCount = deleteCount + 1
+            write("      [-] " .. file .. " geloescht")
+            print("")
+        end
+    end
+
+    -- Lösche games-Verzeichnis falls vorhanden
+    if fs.exists("games") then
+        fs.delete("games")
+        write("      [-] games/ Verzeichnis geloescht")
+        print("")
+    end
+
+    term.setTextColor(colorScheme.success)
+    if deleteCount > 0 then
+        print("      ✓ " .. deleteCount .. " alte Dateien geloescht")
+    else
+        print("      ✓ Keine alten Dateien gefunden")
+    end
+    print("")
+end
+
 -- Hauptinstallation
 local function install()
     term.clear()
@@ -75,8 +109,8 @@ local function install()
     print("")
 
     term.setTextColor(colorScheme.text)
-    print("Dieser Installer wird alle Casino-Dateien")
-    print("automatisch herunterladen und einrichten.")
+    print("Dieser Installer wird alle alten Casino-")
+    print("Dateien loeschen und neu installieren.")
     print("")
     print("Benoetigte Komponenten:")
     print("- HTTP API muss aktiviert sein")
@@ -108,9 +142,12 @@ local function install()
     print("Starte Installation...")
     print("")
 
+    -- Lösche alte Dateien
+    deleteOldFiles()
+
     -- Erstelle Verzeichnisse
     term.setTextColor(colorScheme.text)
-    print("[1/3] Erstelle Verzeichnisse...")
+    print("[2/4] Erstelle Verzeichnisse...")
     ensureDirectory("games")
     term.setTextColor(colorScheme.success)
     print("      ✓ Verzeichnisse erstellt")
@@ -118,7 +155,7 @@ local function install()
 
     -- Download Dateien
     term.setTextColor(colorScheme.text)
-    print("[2/3] Lade Dateien herunter...")
+    print("[3/4] Lade Dateien herunter...")
     print("")
 
     local successCount = 0
@@ -147,7 +184,7 @@ local function install()
 
     -- Zusammenfassung
     term.setTextColor(colorScheme.text)
-    print("[3/3] Installation abgeschlossen!")
+    print("[4/4] Installation abgeschlossen!")
     print("")
 
     if failCount == 0 then
