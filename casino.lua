@@ -293,8 +293,8 @@ local function main()
         -- Versuche RS Bridge zu initialisieren
         local success, err = pcall(function()
             inventory = modules.Inventory.init(peripherals.rsBridge)
-            -- Test ob listItems() funktioniert
-            inventory.getItems()
+            -- Test ob getItem() funktioniert
+            inventory.countDiamonds()
         end)
 
         if not success then
