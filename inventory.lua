@@ -15,6 +15,32 @@ function Inventory.init(rsBridge)
     return Inventory
 end
 
+-- Health-Check: Prüft ob RS Bridge funktional ist
+-- Verwendet generischen getItem() Test ohne Abhängigkeit von spezifischen Items
+function Inventory.healthCheck()
+    if not Inventory.bridge then
+        return false, "Keine Bridge konfiguriert"
+    end
+
+    -- Prüfe ob getItem() Methode existiert
+    if type(Inventory.bridge.getItem) ~= "function" then
+        return false, "RS Bridge hat keine getItem() Methode"
+    end
+
+    -- Test-Aufruf mit einem beliebigen Item (muss nicht existieren)
+    -- Wichtig: Nur ob die Methode funktioniert, nicht ob das Item vorhanden ist
+    local success, result = pcall(function()
+        return Inventory.bridge.getItem({ name = "minecraft:stone" })
+    end)
+
+    if not success then
+        return false, "getItem() Aufruf fehlgeschlagen: " .. tostring(result)
+    end
+
+    -- Bridge ist funktional (egal ob Item gefunden wurde oder nil zurückkam)
+    return true, "RS Bridge funktional"
+end
+
 -- Hole ein spezifisches Item aus dem Netzwerk (effizienter als listItems)
 -- Verwendet getItem() statt listItems() für bessere Kompatibilität und Performance
 function Inventory.getItem(itemName)
