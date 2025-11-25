@@ -15,6 +15,32 @@ function Inventory.init(rsBridge)
     return Inventory
 end
 
+-- Health-Check: Prüft ob RS Bridge funktional ist
+-- Testet mit minecraft:diamond da dies das Item ist, das das Casino benötigt
+function Inventory.healthCheck()
+    if not Inventory.bridge then
+        return false, "Keine Bridge konfiguriert"
+    end
+
+    -- Prüfe ob getItem() Methode existiert
+    if type(Inventory.bridge.getItem) ~= "function" then
+        return false, "RS Bridge hat keine getItem() Methode"
+    end
+
+    -- Test-Aufruf mit minecraft:diamond (Casino-spezifisches Item)
+    -- Wichtig: Nur ob die Methode funktioniert, nicht ob Diamanten vorhanden sind
+    local success, result = pcall(function()
+        return Inventory.bridge.getItem({ name = "minecraft:diamond" })
+    end)
+
+    if not success then
+        return false, "getItem() Aufruf fehlgeschlagen: " .. tostring(result)
+    end
+
+    -- Bridge ist funktional (egal ob Diamanten gefunden wurden oder nil zurückkam)
+    return true, "RS Bridge funktional"
+end
+
 -- Hole ein spezifisches Item aus dem Netzwerk (effizienter als listItems)
 -- Verwendet getItem() statt listItems() für bessere Kompatibilität und Performance
 function Inventory.getItem(itemName)

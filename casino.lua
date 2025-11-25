@@ -293,12 +293,24 @@ local function main()
         -- Versuche RS Bridge zu initialisieren
         local success, err = pcall(function()
             inventory = modules.Inventory.init(peripherals.rsBridge)
-            -- Test ob getItem() funktioniert
-            inventory.countDiamonds()
         end)
 
-        if not success then
-            print("WARNUNG: RS Bridge funktioniert nicht richtig.")
+        if success then
+            -- Health-Check: Prüfe ob RS Bridge API funktional ist
+            local healthy, healthMsg = inventory.healthCheck()
+            if not healthy then
+                print("WARNUNG: RS Bridge Health-Check fehlgeschlagen.")
+                print("Grund: " .. tostring(healthMsg))
+                print("Verwende Simple Mode...")
+                sleep(3)
+                peripherals.rsBridge = nil
+                inventory = modules.Inventory.initSimple()
+                inventory.wrap()
+            else
+                print("RS Bridge OK: " .. healthMsg)
+            end
+        else
+            print("WARNUNG: RS Bridge Initialisierung fehlgeschlagen.")
             print("Fehler: " .. tostring(err))
             print("Verwende Simple Mode...")
             sleep(3)
