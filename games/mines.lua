@@ -92,19 +92,15 @@ function Mines.playRound(bet, numMines)
     local totalFields = gridSize * gridSize
     local safeFields = totalFields - numMines
 
-    -- Minen-Positionen generieren
+    -- Minen-Positionen generieren (effiziente Set-basierte Methode)
     local minePositions = {}
+    local mineSet = {}  -- Set für O(1) Lookup
+
     while #minePositions < numMines do
         local pos = math.random(totalFields)
-        local alreadyExists = false
-        for _, existingPos in ipairs(minePositions) do
-            if existingPos == pos then
-                alreadyExists = true
-                break
-            end
-        end
-        if not alreadyExists then
+        if not mineSet[pos] then
             table.insert(minePositions, pos)
+            mineSet[pos] = true
         end
     end
 

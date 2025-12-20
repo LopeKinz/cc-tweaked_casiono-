@@ -33,7 +33,14 @@ end
 
 -- Text zentriert anzeigen
 function UI.centerText(y, text, textColor, bgColor)
+    -- Kürze Text wenn zu lang für Bildschirm
+    if #text > UI.width then
+        text = text:sub(1, UI.width - 3) .. "..."
+    end
+
     local x = math.floor((UI.width - #text) / 2) + 1
+    x = math.max(1, x)  -- Stelle sicher x >= 1
+
     UI.monitor.setCursorPos(x, y)
     UI.monitor.setTextColor(textColor or UI.colors.text)
     UI.monitor.setBackgroundColor(bgColor or UI.colors.bg)
@@ -42,6 +49,14 @@ end
 
 -- Text anzeigen
 function UI.drawText(x, y, text, textColor, bgColor)
+    -- Kürze Text wenn er über Bildschirmgrenze hinausgeht
+    local maxLength = UI.width - x + 1
+    if #text > maxLength and maxLength > 3 then
+        text = text:sub(1, maxLength - 3) .. "..."
+    elseif #text > maxLength then
+        text = text:sub(1, maxLength)
+    end
+
     UI.monitor.setCursorPos(x, y)
     UI.monitor.setTextColor(textColor or UI.colors.text)
     UI.monitor.setBackgroundColor(bgColor or UI.colors.bg)

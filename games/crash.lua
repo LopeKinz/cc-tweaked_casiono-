@@ -86,6 +86,8 @@ function Crash.playRound(bet)
     )
 
     -- Multiplier steigt
+    local timerID = os.startTimer(0.1)
+
     while multiplier < crashPoint do
         -- Multiplier anzeigen
         Crash.ui.drawBox(
@@ -102,20 +104,21 @@ function Crash.playRound(bet)
         Crash.ui.centerText(centerY, multText, color, colors.gray)
         Crash.ui.centerText(centerY + 2, "Gewinn: " .. math.floor(bet * multiplier), colors.white, colors.gray)
 
-        -- Prüfen auf Touch
-        local event, side, x, y = os.pullEvent()
+        -- Prüfen auf Touch oder Timer
+        local event, param1, param2, param3 = os.pullEvent()
 
         if event == "monitor_touch" then
+            local x, y = param1, param2
             if Crash.ui.isInBounds(x, y, cashoutButton) then
                 cashedOut = true
                 cashoutMultiplier = multiplier
                 break
             end
+        elseif event == "timer" and param1 == timerID then
+            -- Timer abgelaufen - Multiplier erhöhen
+            multiplier = multiplier + 0.1
+            timerID = os.startTimer(0.1)
         end
-
-        -- Multiplier erhöhen
-        multiplier = multiplier + 0.1
-        sleep(0.1)
     end
 
     -- Crash Animation

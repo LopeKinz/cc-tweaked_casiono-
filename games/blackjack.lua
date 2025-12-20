@@ -50,7 +50,7 @@ function Blackjack.play(playerName, playerBalance)
             sleep(2)
         else
             -- Spiel starten
-            local won, payout = Blackjack.playRound(bet)
+            local won, payout = Blackjack.playRound(bet, playerBalance)
 
             -- Balance aktualisieren
             if won == "push" then
@@ -93,7 +93,7 @@ function Blackjack.selectBet(maxBet)
 end
 
 -- Eine Runde spielen
-function Blackjack.playRound(bet)
+function Blackjack.playRound(bet, playerBalance)
     -- Deck erstellen
     local deck = Blackjack.createDeck()
 

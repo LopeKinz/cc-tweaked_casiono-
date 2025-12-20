@@ -98,10 +98,17 @@ function Inventory.countPlayerDiamonds()
         return 0
     end
 
+    -- Prüfe ob Kiste noch verfügbar ist (kann disconnected sein)
+    local success, size = pcall(function() return Inventory.playerChest.size() end)
+    if not success or not size then
+        print("WARNUNG: Spieler-Kiste nicht erreichbar!")
+        return 0
+    end
+
     local totalDiamonds = 0
 
     -- Durchsuche alle Slots der Kiste
-    for slot = 1, Inventory.playerChest.size() do
+    for slot = 1, size do
         local item = Inventory.playerChest.getItemDetail(slot)
         if item and item.name == "minecraft:diamond" then
             totalDiamonds = totalDiamonds + item.count
@@ -152,7 +159,7 @@ function Inventory.takeFromPlayer(amount)
     end
 
     print("[ERFOLG] " .. amount .. " Diamanten vom Spieler genommen")
-    return true
+    return true, nil
 end
 
 -- Diamanten zur Spieler-Kiste hinzufügen (Gewinn)
@@ -192,7 +199,7 @@ function Inventory.giveToPlayer(amount)
     end
 
     print("[ERFOLG] " .. amount .. " Diamanten zum Spieler transferiert")
-    return true
+    return true, nil
 end
 
 -- Balance synchronisieren: Aktualisiere physische Diamanten basierend auf Balance-Änderung
@@ -221,7 +228,7 @@ function Inventory.syncBalance(oldBalance, newBalance)
 
     -- Keine Änderung
     print("[SYNC] Keine Balance-Änderung")
-    return true
+    return true, nil
 end
 
 -- Diamanten aus dem Netzwerk nehmen

@@ -2,6 +2,7 @@
 local Database = {}
 
 local DATA_FILE = "casino_data.txt"
+local BACKUP_FILE = "casino_data.backup.txt"
 
 -- Datenbank initialisieren
 function Database.init()
@@ -18,7 +19,23 @@ function Database.init()
         file.close()
 
         if content and content ~= "" then
-            Database.data = textutils.unserialize(content) or Database.data
+            local loadedData = textutils.unserialize(content)
+
+            -- Validiere geladene Daten
+            if loadedData and type(loadedData) == "table" then
+                -- Prüfe ob grundlegende Struktur vorhanden ist
+                if loadedData.players and type(loadedData.players) == "table" then
+                    Database.data = loadedData
+
+                    -- Stelle sicher, dass alle erforderlichen Felder existieren
+                    if not Database.data.jackpot then Database.data.jackpot = 100 end
+                    if not Database.data.lastDailyReset then Database.data.lastDailyReset = os.day() end
+                else
+                    print("WARNUNG: Korrupte Datenbank - verwende Standard-Daten")
+                end
+            else
+                print("WARNUNG: Ungültige Datenbank-Datei - verwende Standard-Daten")
+            end
         end
     end
 
@@ -50,8 +67,17 @@ function Database.getPlayer(name)
     return Database.data.players[name]
 end
 
--- Speichere alle Daten
+-- Speichere alle Daten (mit Backup)
 function Database.save()
+    -- Erstelle Backup der aktuellen Datei vor dem Überschreiben
+    if fs.exists(DATA_FILE) then
+        if fs.exists(BACKUP_FILE) then
+            fs.delete(BACKUP_FILE)
+        end
+        fs.copy(DATA_FILE, BACKUP_FILE)
+    end
+
+    -- Speichere neue Daten
     local file = fs.open(DATA_FILE, "w")
     file.write(textutils.serialize(Database.data))
     file.close()

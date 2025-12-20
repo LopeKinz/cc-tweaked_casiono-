@@ -153,17 +153,13 @@ function HighLow.playRound(bet)
         local isHigher = nextCard.value > currentCard.value
         local isEqual = nextCard.value == currentCard.value
 
-        local correct = false
         if isEqual then
-            -- Gleiche Karte = Push (weiter spielen)
+            -- Gleiche Karte = Push (weiter spielen mit neuer Karte)
             HighLow.ui.centerText(26, "GLEICH! Noch einmal!", colors.yellow)
             sleep(2)
-            -- Nicht weitermachen, neue Karte ziehen
+            currentCard = nextCard
+            -- Loop wiederholt sich
         elseif guessedHigher == isHigher then
-            correct = true
-        end
-
-        if correct then
             -- Richtig geraten!
             streak = streak + 1
             currentMultiplier = currentMultiplier + 0.5

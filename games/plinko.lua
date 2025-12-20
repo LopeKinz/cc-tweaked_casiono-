@@ -132,8 +132,11 @@ function Plinko.drop(bet)
         Plinko.ui.monitor.write(" ")
     end
 
-    -- Finale Position - welcher Slot?
-    local slotIndex = math.max(1, math.min(math.floor(ballX / slotWidth) + 1, #multipliers))
+    -- Finale Position - welcher Slot? (Verbesserte Berechnung)
+    -- Normalisiere ballX relativ zur Boardbreite für faire Verteilung
+    local normalizedX = ballX / boardWidth  -- 0.0 bis ~1.0
+    local slotIndex = math.floor(normalizedX * #multipliers) + 1
+    slotIndex = math.max(1, math.min(slotIndex, #multipliers))
     local finalMultiplier = multipliers[slotIndex]
 
     -- Ball in Slot fallen lassen

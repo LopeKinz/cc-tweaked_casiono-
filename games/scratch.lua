@@ -84,8 +84,21 @@ function Scratch.playCard(bet)
     -- Mit etwas Glück ein paar gleiche hinzufügen
     if math.random(100) <= 30 then  -- 30% Gewinnchance
         local winSymbol = symbols[math.random(#symbols)]
-        -- 3 zufällige Positionen mit Gewinn-Symbol ersetzen
-        local positions = {math.random(9), math.random(9), math.random(9)}
+        -- 3 eindeutige zufällige Positionen mit Gewinn-Symbol ersetzen
+        local positions = {}
+        while #positions < 3 do
+            local pos = math.random(9)
+            local alreadyExists = false
+            for _, existingPos in ipairs(positions) do
+                if existingPos == pos then
+                    alreadyExists = true
+                    break
+                end
+            end
+            if not alreadyExists then
+                table.insert(positions, pos)
+            end
+        end
         for _, pos in ipairs(positions) do
             fields[pos] = winSymbol
         end
